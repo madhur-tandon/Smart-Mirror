@@ -1,5 +1,4 @@
-from selfieAI import SendMail, capture
-from speechRecAI import SpeechAI
+# import selfieAI
 import sys
 import cv2
 
@@ -28,6 +27,8 @@ class faceAI(object):
                 cv2.destroyAllWindows()
 
                 return True
+            else:
+                return False
 
     def show_live_detection(self):
         face_cascade = cv2.CascadeClassifier(self.recognitionModel)
@@ -52,26 +53,23 @@ class faceAI(object):
         video_capture.release()
         cv2.destroyAllWindows()
 
-    def theft_mode(self):
-        F = faceAI()
-        S = SpeechAI()
-        record,audio = S.ears()
-        theftKey = S.recognize(record,audio)
-        if "save" in theftKey:
-            while True:
-                if F.detect_face():
-                    capture(True)
-                    SendMail('filename.jpg',True)
-                    return 1
+    # def theft_mode(self):
+    #     F = faceAI()
+    #     theftKey = input()
+    #     if "theft" in theftKey:
+    #         while True:
+    #             if F.detect_face():
+    #                 selfieAI.capture(True)
+    #                 selfieAI.SendMail('filename.jpg',True)
+    #                 return 1
 
 if __name__ == "__main__":
-    F = faceAI()
-    F.show_live_detection()
+    F = faceAI(camera=0)
+    # F.show_live_detection()
     """
-    Comment the above line & 
+    Comment the above line &
     Remove Comments below to Enable Theft
     Mode for the Mirror.
     """
-    # while True:
-    #     if F.theft_mode() == 1:
-    #         break
+    while True:
+        print(F.detect_face())

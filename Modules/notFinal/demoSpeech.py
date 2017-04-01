@@ -1,6 +1,5 @@
 import speech_recognition as speechAI
-import faceAI
-from server import sendToClient
+import time
 
 class SpeechAI(object):
     def __init__(self,threshold=0.30,lex=False,phrase="hello"):
@@ -14,7 +13,7 @@ class SpeechAI(object):
         try:
             if(self.lex==False):
                 min_conf = 1
-                spoken = recognize.recognize_google(audio,language = "en-IN",show_all=True)
+                spoken = recognize.recognize_google(audio,key="AIzaSyAcalCzUvPmmJ7CZBFOEWx2Z1ZSn4Vs1gg",language = "en-IN",show_all=True)
                 print(spoken)
                 if spoken != []:
                     for i in spoken['alternative']:
@@ -30,11 +29,10 @@ class SpeechAI(object):
                             print("YOU SAID "+i['transcript'])
                             break
                 else:
-                    sendToClient("Couldn't Understand")
                     print("Couldn't Understand")
             else:
                 min_conf = 1
-                spoken = recognize.recognize_google(audio,language = "en-IN",show_all=True)
+                spoken = recognize.recognize_google(audio,key="AIzaSyAcalCzUvPmmJ7CZBFOEWx2Z1ZSn4Vs1gg",language = "en-IN",show_all=True)
                 print(spoken)
                 outcomes = []
                 if spoken != []:
@@ -56,13 +54,10 @@ class SpeechAI(object):
                             # print("YOU SAID "+i['transcript'])
                             # break
                 else:
-                    sendToClient("Couldn't Understand")
                     print("Couldn't Understand")
         except speechAI.UnknownValueError:
-            sendToClient("Couldn't Understand")
             print("Couldn't Understand")
         except speechAI.RequestError as e:
-            sendToClient("Could not request results from Google Speech Recognition service; {0}".format(e))
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
         return transcript
 
@@ -70,18 +65,25 @@ class SpeechAI(object):
         micro_source = speechAI.Microphone()
         record = speechAI.Recognizer()
         with micro_source as source:
-            record.adjust_for_ambient_noise(source,duration=2)
+            record.adjust_for_ambient_noise(source,duration=1)
             record.dynamic_energy_threshold = True
-            sendToClient("I am all Ears!")
             print("I am all Ears!")
             audio = record.listen(source)
         return record,audio
 
 if __name__=="__main__":
-    F = faceAI.faceAI(camera=0)
-    S = SpeechAI(0.30,phrase="okay mirror")
-    while True:
-        if F.detect_face():
-            print("Found Face")
-            record,audio = S.ears()
-            S.recognize(record,audio)
+    S = SpeechAI(0.30,"okay mirror")
+    start = time.time()
+    record,audio = S.ears()
+    end = time.time()
+    print("Time to record is %s" %(end-start))
+    s = time.time()
+    x = S.recognize(record,audio)
+    e = time.time()
+    print("Time to recognize is %s" %(e-s))
+    if x==S.phrase:
+        while True:
+                record,audio = S.ears()
+                S.recognize(record,audio)
+    else:
+        print("Say The Launching Phrase")
