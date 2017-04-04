@@ -115,7 +115,7 @@ class mirror(object):
             print(intent)
             if intent is not None:
                 newsList = self.news.findNews(intent)
-                apiObject.items = newsList
+                apiObject["items"] = newsList
                 for i in range(0,5):
                     print(newsList[i]["title"])
                     speak(newsList[i]["title"])
