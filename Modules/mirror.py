@@ -102,6 +102,7 @@ class mirror(object):
             if location is not None and intent is not None:
                 LJ = self.maps.getLocation(location)
                 wsObject["src"] = self.maps.findMap(intent,location)
+                sendJSON(wsObject)
             else:
                 sendToClient("I'm Sorry, I couldn't retrieve maps at the moment")
                 speak("I'm Sorry, I couldn't retrieve maps at the moment")
