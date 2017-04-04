@@ -10,7 +10,7 @@ def speak(text):
         tts = gTTS(text=text, lang='en')
         tts.save("file.mp3")
         song = AudioSegment.from_mp3("file.mp3")
-        sendToClient(text)
+        # sendToClient(text)
         play(song)
         os.remove("file.mp3")
     except Exception as e:
