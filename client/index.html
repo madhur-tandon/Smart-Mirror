@@ -18,7 +18,7 @@
 		<ul data-bind="foreach: news">
 			<li data-bind="text: title"> </li>
 			<li data-bind="text: description"> </li>
-			<li> <img data-bind="attr: image"> </img> </li>
+			<li> <img data-bind="attr: {src: image}" /> </li>
 		</ul>
 	</div> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
