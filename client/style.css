@@ -1,5 +1,6 @@
 body {
 	background-color:#000000;
+	font-family: calibri;
 }
 
 body > div {
@@ -14,4 +15,6 @@ body > div {
 
 body pre {
 	font:monospace; 
+	text-align:left;
+	padding-left: 2em;
 }

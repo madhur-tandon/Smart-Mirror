@@ -20,7 +20,7 @@ exampleSocket.onmessage = function (event) {
       break;
     case "json":
       vm.type("json")
-      vm.json(o.json)
+      vm.json(JSON.stringify(o.json, null, 2))
       break;
     case "news":
       vm.type("news")

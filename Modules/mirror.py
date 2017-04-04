@@ -109,15 +109,17 @@ class mirror(object):
             speak("I'm Sorry, I couldn't understand what you meant by that")
 
     def findNews(self,entities=None):
+        apiObject = {"type": "news"}
         if entities is not None:
             intent = entities['news'][0]["value"]
             print(intent)
             if intent is not None:
                 newsList = self.news.findNews(intent)
+                apiObject.items = newsList
                 for i in range(0,5):
                     print(newsList[i]["title"])
-                    sendToClient(newsList[i]["title"])
                     speak(newsList[i]["title"])
+                sendJSON(apiObject)
             else:
                 sendToClient("I'm Sorry, I couldn't retrieve news at the moment")
                 speak("I'm Sorry, I couldn't retrieve news at the moment")

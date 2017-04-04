@@ -8,6 +8,7 @@ Usage instructions:
 
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import threading
+import json
 
 clients = []
 
