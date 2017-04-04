@@ -11,7 +11,7 @@ import newsAI
 import mapsAI
 import traceback
 import languageAI
-from server import sendToClient
+from server import sendToClient, sendJSON
 
 wit_token = "Bearer A5YKQ3WVJPMYBDUA655USHMZ3HHJ4ZQE"
 launchPhrases = ["ok mirror","ok a mirror","okay mirror","okey mirror","ok mera","okay mera","uk mirror"]
@@ -116,10 +116,10 @@ class mirror(object):
             if intent is not None:
                 newsList = self.news.findNews(intent)
                 apiObject["items"] = newsList
+                sendJSON(apiObject)
                 for i in range(0,5):
                     print(newsList[i]["title"])
                     speak(newsList[i]["title"])
-                sendJSON(apiObject)
             else:
                 sendToClient("I'm Sorry, I couldn't retrieve news at the moment")
                 speak("I'm Sorry, I couldn't retrieve news at the moment")
