@@ -87,6 +87,7 @@ class mirror(object):
             self.action()
 
     def findMaps(self,entities=None):
+        wsObject = {"type": "image"}
         if entities is not None:
             maxConf = 0
             intent = entities['maps'][0]["value"]
@@ -100,7 +101,7 @@ class mirror(object):
 
             if location is not None and intent is not None:
                 LJ = self.maps.getLocation(location)
-                print(self.maps.findMap(intent,location))
+                wsObject["src"] = self.maps.findMap(intent,location)
             else:
                 sendToClient("I'm Sorry, I couldn't retrieve maps at the moment")
                 speak("I'm Sorry, I couldn't retrieve maps at the moment")
