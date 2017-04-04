@@ -41,6 +41,9 @@ def sendToClient(msg):
     for c in clients:
         c.sendMessage(msg)
 
+def sendJSON(o):
+    sendToClient(json.dumps(o))
+
 thread = threading.Thread(target = websock_server)
 thread.daemon = True
 thread.start()

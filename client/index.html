@@ -2,9 +2,21 @@
 <head>
 	<title> Websocks plis </title>
 </head>
-<body style="background-color:#000000;">
-	<pre style="position:absolute; color:#FFFFFF; font:monospace; font-size:20px; text-align:center; top:50%; left:0; right:0;" id="text-goes-here" data-bind="text: text"></pre>
+<body>
+	<div id="text-content" data-bind="if: type() == 'text' || type() == 'json'"> 
+		<pre id="text-goes-here" data-bind="text: text"></pre>
+	</div>
+	<div data-bind="if: type() == 'image'">
+		<img data-bind="attr:{src: imageSrc}"/>
+	</div>
+	<div data-bind="if: type() == 'news'"> 
+		<h1> Recent News </h1>
+		<ul data-bind="foreach: news">
+			<li data-bind="text: headline"> </li>
+		</ul>
+	</div> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
 	<script src="script.js"></script>
 </body>
