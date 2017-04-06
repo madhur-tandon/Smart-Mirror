@@ -59,6 +59,24 @@ def SendMail(ImgFileName,theft=False):
             s.sendmail(msg['From'], msg['To'], msg.as_string())
         print("Mail Sent")
         s.quit()
+		
+def getImageName():
+    base = "../client/selfies/"
+	try:
+		file = open(base + "counter.txt", "r+")
+        counter = int(file.readline())
+        counter += 1
+        file.seek(0)
+        file.write(str(counter))
+        file.truncate()
+        file.close()
+    except FileNotFoundError:
+        file = open(base + "counter.txt", "w+")
+        file.write("0")
+        file.close()
+        counter = 0
+    return base + counter + ".jpg" # like 1.jpg, etc
+
 
 def capture(theft=False):
     if theft == False:
@@ -74,7 +92,7 @@ def capture(theft=False):
             imshow("cam-test",img)
             waitKey(5000)
             destroyWindow("cam-test")
-            imwrite("filename.jpg",img)
+            imwrite(getImageName(),img)
     else:
         cam = VideoCapture(0)
         s, img = cam.read()
@@ -82,8 +100,9 @@ def capture(theft=False):
             namedWindow("cam-test")
             imshow("cam-test",img)
             destroyWindow("cam-test")
-            imwrite("filename.jpg",img)
+            imwrite(getImageName(),img)
 
 if __name__=="__main__":
     capture()
     SendMail('filename.jpg')
+ 
