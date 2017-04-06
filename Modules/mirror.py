@@ -73,6 +73,8 @@ class mirror(object):
                     self.findWeather(entities)
                 elif "userStatus" in entities:
                     self.userStatus(entities)
+                elif "interaction" in entities:
+                    self.interaction(entities)
                 else:
                     sendToClient("I'm Sorry, I couldn't understand what you meant by that")
                     speak("I'm Sorry, I couldn't understand what you meant by that")
@@ -169,6 +171,14 @@ class mirror(object):
         else:
             category = "neutral"
         phrase = self.lang.user_compliment(category,property)
+        sendToClient(phrase)
+        speak(phrase)
+
+    def interaction(self,entities=None):
+        property = None
+        if entities is not None:
+            property = entities['interaction'][0]['value']
+        phrase = self.lang.interaction(property)
         sendToClient(phrase)
         speak(phrase)
 
