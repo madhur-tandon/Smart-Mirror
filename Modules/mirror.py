@@ -42,10 +42,33 @@ class mirror(object):
         self.lang = languageAI.naturalLanguageAI(myName)
 
     def initialize(self):
+        inertia = 0 # inertia for moving from active mode to passive mode
+        activeMode = True
         while True:
             #sendToClient("")    # Clear Screen
+
+            # inertia logic
+            if inertia <= 0 and activeMode:
+                respond(
+                    False, 
+                    {
+                        "type": "command",
+                        "command": "passive-mode"
+                    }
+                )
+                activeMode = False
+
             if self.face.detect_face():
+                inertia = 20
                 print("Found Face")
+                activeMode = True
+                respond(
+                    "Hi " + random.choice(["pretty", "beautiful", "sexy", "cutie", "handsome", "lovely"]),
+                    {
+                        "type": "command",
+                        "command": "active-mode"
+                    }
+                )
                 if useLaunchPhrase:
                     record,audio = self.speech.ears()
                     speech = self.speech.recognize(record,audio)
