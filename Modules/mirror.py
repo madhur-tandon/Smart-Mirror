@@ -98,7 +98,6 @@ class mirror(object):
             self.action()
 
     def findMaps(self,entities=None):
-        wsObject = {"type": "image"}
         if entities is not None:
             maxConf = 0
             intent = entities['maps'][0]["value"]
@@ -111,9 +110,8 @@ class mirror(object):
             print(location)
 
             if location is not None and intent is not None:
-                LJ = self.maps.getLocation(location)
-                wsObject["src"] = self.maps.findMap(intent,location)
-                sendJSON(wsObject)
+                LJ = self.maps.getLocation(location) #@madhur why is LJ needed here?
+                respond("Here is a map of " + location, {"type": "image", "src": self.maps.findMap(intent,location)})
             else:
                 respond("I'm Sorry, I couldn't retrieve maps at the moment")
         else:
@@ -126,11 +124,7 @@ class mirror(object):
             print(intent)
             if intent is not None:
                 newsList = self.news.findNews(intent)
-                apiObject["items"] = newsList
-                sendJSON(apiObject)
-                for i in range(0,5):
-                    print(newsList[i]["title"])
-                    speak(newsList[i]["title"])
+                respond(", ".join(map(lambda x: x["title"], newsList)), {"type": "news", "items": newsList})
             else:
                 respond("I'm Sorry, I couldn't retrieve news at the moment")
         else:
