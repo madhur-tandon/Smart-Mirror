@@ -18,6 +18,20 @@ launchPhrases = ["ok mirror","ok a mirror","okay mirror","okey mirror","ok mera"
 useLaunchPhrase = False
 myName = "Master"
 
+def respond(toSpeak, toSend = False):
+    if not toSend && not toSpeak:
+        return
+    elif not toSend:
+        toSend = toSpeak
+
+    if toSpeak:
+        speak(toSpeak)
+
+    if (isinstance(toSend), str):
+        sendToClient(toSend)
+    else:
+        sendJSON(toSend)
+
 class mirror(object):
     def __init__(self):
         self.speech = SpeechAI(0.30)
@@ -29,7 +43,7 @@ class mirror(object):
 
     def initialize(self):
         while True:
-            sendToClient("")    # Clear Screen
+            #sendToClient("")    # Clear Screen
             if self.face.detect_face():
                 print("Found Face")
                 if useLaunchPhrase:
@@ -37,14 +51,13 @@ class mirror(object):
                     speech = self.speech.recognize(record,audio)
                     if speech is not None and speech.lower() in launchPhrases:
                         ack = self.lang.acknowledge()
-                        sendToClient(ack)
-                        speak(ack)
+                        respond(ack)
                         self.action()
                 else:
                     self.action()
 
     def action(self):
-        record,audio = self.speech.ears()
+        record, audio = self.speech.ears()
         speech = self.speech.recognize(record,audio)
 
         if speech is not None:
@@ -74,14 +87,12 @@ class mirror(object):
                 elif "userStatus" in entities:
                     self.userStatus(entities)
                 else:
-                    sendToClient("I'm Sorry, I couldn't understand what you meant by that")
-                    speak("I'm Sorry, I couldn't understand what you meant by that")
+                    respond("I'm Sorry, I couldn't understand what you meant by that")
 
             except Exception as e:
                 print(e)
                 traceback.print_exc()
-                sendToClient("I'm Sorry, I couldn't understand what you meant by that")
-                speak("I'm Sorry, I couldn't understand what you meant by that")
+                respond("I'm Sorry, I couldn't understand what you meant by that")
                 return
 
             self.action()
@@ -104,11 +115,9 @@ class mirror(object):
                 wsObject["src"] = self.maps.findMap(intent,location)
                 sendJSON(wsObject)
             else:
-                sendToClient("I'm Sorry, I couldn't retrieve maps at the moment")
-                speak("I'm Sorry, I couldn't retrieve maps at the moment")
+                respond("I'm Sorry, I couldn't retrieve maps at the moment")
         else:
-            sendToClient("I'm Sorry, I couldn't understand what you meant by that")
-            speak("I'm Sorry, I couldn't understand what you meant by that")
+            respond("I'm Sorry, I couldn't understand what you meant by that")
 
     def findNews(self,entities=None):
         apiObject = {"type": "news"}
@@ -123,11 +132,9 @@ class mirror(object):
                     print(newsList[i]["title"])
                     speak(newsList[i]["title"])
             else:
-                sendToClient("I'm Sorry, I couldn't retrieve news at the moment")
-                speak("I'm Sorry, I couldn't retrieve news at the moment")
+                respond("I'm Sorry, I couldn't retrieve news at the moment")
         else:
-            sendToClient("I'm Sorry, I couldn't understand what you meant by that")
-            speak("I'm Sorry, I couldn't understand what you meant by that")
+            respond("I'm Sorry, I couldn't understand what you meant by that")
 
     def findWeather(self,entities=None):
         if entities is not None:
@@ -145,16 +152,14 @@ class mirror(object):
                     LJ = self.weather.get_DifferentLocation(location)
                     self.weather.findWeather(intent,LJ)
                 else:
-                    sendToClient("I'm Sorry, I couldn't retrieve weather info at the moment")
-                    speak("I'm Sorry, I couldn't retrieve weather info at the moment")
+                    respond("I'm Sorry, I couldn't retrieve weather info at the moment")
             else:
                 intent = entities['weather'][0]["value"]
                 print(intent)
                 LJ = self.weather.getLocation()
                 self.weather.findWeather(intent,LJ)
         else:
-            sendToClient("I'm Sorry, I couldn't understand what you meant by that")
-            speak("I'm Sorry, I couldn't understand what you meant by that")
+            respond("I'm Sorry, I couldn't understand what you meant by that")
 
     def userStatus(self,entities=None):
         property = None
@@ -169,8 +174,7 @@ class mirror(object):
         else:
             category = "neutral"
         phrase = self.lang.user_compliment(category,property)
-        sendToClient(phrase)
-        speak(phrase)
+        respond(phrase)
 
 
 if __name__ == "__main__":
