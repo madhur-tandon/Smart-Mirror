@@ -177,8 +177,7 @@ class mirror(object):
         if entities is not None:
             property = entities['interaction'][0]['value']
         phrase = self.lang.interaction(property)
-        sendToClient(phrase)
-        speak(phrase)
+        respond(phrase)
 
 
 if __name__ == "__main__":
