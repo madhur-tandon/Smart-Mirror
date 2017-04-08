@@ -40,15 +40,44 @@ class mirror(object):
         self.news = newsAI.news()
         self.maps = mapsAI.maps()
         self.lang = languageAI.naturalLanguageAI(myName)
+        self.activeMode = False
+        self.passivePoll = {
+            "headlines": {
+                "refresh": 60*60, #60 minutes
+                "lastDone": 0
+            },
+            "quotes": {
+                "refresh": 3*60,
+                "lastDone": 0
+            },
+            "weather": {
+                "refresh": 5*60*60,
+                "lastDone": 0
+            },
+            "mess-meal": {
+                "refresh": 3*60,
+                "lastDone": 0
+            }
+        }
 
+        # info of song will be sent by its thread
     def initialize(self):
         inertia = 0 # inertia for moving from active mode to passive mode
-        activeMode = True
+        respond(
+            False, 
+            {
+                "type": "command",
+                "command": "passive-mode"
+            }
+        )
         while True:
             #sendToClient("")    # Clear Screen
 
+            if not self.activeMode:
+                pass
+
             # inertia logic
-            if inertia <= 0 and activeMode:
+            if inertia <= 0 and self.activeMode:
                 respond(
                     False, 
                     {
@@ -56,12 +85,12 @@ class mirror(object):
                         "command": "passive-mode"
                     }
                 )
-                activeMode = False
+                self.activeMode = False
 
             if self.face.detect_face():
                 inertia = 20
                 print("Found Face")
-                activeMode = True
+                self.activeMode = True
                 respond(
                     "Hi " + random.choice(["pretty", "beautiful", "sexy", "cutie", "handsome", "lovely"]),
                     {
