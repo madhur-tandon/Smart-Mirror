@@ -1,6 +1,6 @@
 """
 Author: Peeyush Kushwaha
-Usage instructions: 
+Usage instructions:
     1. Install SimpleWebsocketServer using the command `sudo pip install git+https://github.com/dpallot/simple-websocket-server.git`
     2. run server via python -i server.py and in the commandline and try to send a message using sendToClient function or in your own file do `from server import sendToClient`
     3. Run the client directory on localhost somehow. I'm using npm's reload package
@@ -11,6 +11,7 @@ import threading
 import json
 import eventing
 import time
+import datetime
 
 clients = []
 

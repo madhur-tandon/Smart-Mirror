@@ -19,7 +19,7 @@ useLaunchPhrase = False
 myName = "Master"
 
 def respond(toSpeak, toSend = False):
-    if not toSend && not toSpeak:
+    if not toSend and not toSpeak:
         return
     elif not toSend:
         toSend = toSpeak
@@ -27,7 +27,7 @@ def respond(toSpeak, toSend = False):
     if toSpeak:
         speak(toSpeak)
 
-    if (isinstance(toSend), str):
+    if (isinstance(toSend, str)):
         sendToClient(toSend)
     else:
         sendJSON(toSend)
@@ -64,7 +64,7 @@ class mirror(object):
     def initialize(self):
         inertia = 0 # inertia for moving from active mode to passive mode
         respond(
-            False, 
+            False,
             {
                 "type": "command",
                 "command": "passive-mode"
@@ -76,6 +76,7 @@ class mirror(object):
             if not self.activeMode: # passive mode
                 for k in self.passivePollData:
                     if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
+                        response = ""
                         if(k == "headlines"):
                             response = self.news.findNews(random.choice(["india", "general", "tech"]))
                         elif(k == "weather"):
@@ -87,7 +88,7 @@ class mirror(object):
             # inertia logic
             if inertia <= 0 and self.activeMode:
                 respond(
-                    False, 
+                    False,
                     {
                         "type": "command",
                         "command": "passive-mode"

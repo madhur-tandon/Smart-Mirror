@@ -8,7 +8,8 @@ exampleSocket.onmessage = function (event) {
     o.text = event.data
     o.type = "text"
   }
-  
+  console.log("got message", o)
+
   switch (o.type) {
     case "command":
       switch(o.command) {
