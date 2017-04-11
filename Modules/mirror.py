@@ -41,7 +41,7 @@ class mirror(object):
         self.maps = mapsAI.maps()
         self.lang = languageAI.naturalLanguageAI(myName)
         self.activeMode = False
-        self.passivePoll = {
+        self.passivePollData = {
             "headlines": {
                 "refresh": 60*60, #60 minutes
                 "lastDone": 0
@@ -73,8 +73,16 @@ class mirror(object):
         while True:
             #sendToClient("")    # Clear Screen
 
-            if not self.activeMode:
-                pass
+            if not self.activeMode: # passive mode
+                for k in self.passivePollData:
+                    if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
+                        if(k == "headlines"):
+                            response = self.news.findNews(random.choice(["india", "general", "tech"]))
+                        elif(k == "weather"):
+                            LJ = self.weather.getLocation()
+                            response = self.weather.findWeather("7-day", LJ)
+                        respond(False, response)
+                        self.passivePollData[k]["lastDone"] = time.time()
 
             # inertia logic
             if inertia <= 0 and self.activeMode:
@@ -198,7 +206,8 @@ class mirror(object):
                 print(location)
                 if location is not None:
                     LJ = self.weather.get_DifferentLocation(location)
-                    self.weather.findWeather(intent,LJ)
+                    response = self.weather.findWeather(intent,LJ)
+                    print(response) #unsure about weather's data structure
                 else:
                     respond("I'm Sorry, I couldn't retrieve weather info at the moment")
             else:

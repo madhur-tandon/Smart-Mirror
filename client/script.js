@@ -10,6 +10,12 @@ exampleSocket.onmessage = function (event) {
   }
   
   switch (o.type) {
+    case "command":
+      switch(o.command) {
+        case "active-mode": vm.mode("active"); break;
+        case "passive-mode": vm.mode("passive"); break;
+      }
+      break;
     case "image":
       vm.type("image")
       vm.imageSrc(o.src)
