@@ -9,6 +9,8 @@ Usage instructions:
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import threading
 import json
+import eventing
+import time
 
 clients = []
 
@@ -45,6 +47,21 @@ def sendToClient(msg):
 def sendJSON(o):
     sendToClient(json.dumps(o))
 
-thread = threading.Thread(target = websock_server)
-thread.daemon = True
-thread.start()
+def scheduled(): # runs in own thread
+    while True:
+        time.sleep(1)
+        now = datetime.datetime.now()
+        job = eventing.jobs.get()
+
+        if (job[0] < now + datetime.timedelta(seconds = 1)):
+            sendJSON(job[1])
+        else:
+            eventing.jobs.put(job)
+
+serverThread = threading.Thread(target = websock_server)
+serverThread.daemon = True
+serverThread.start()
+
+scheduledThread = threading.Thread(target = scheduled)
+scheduledThread.daemon = True
+scheduledThread.start()
