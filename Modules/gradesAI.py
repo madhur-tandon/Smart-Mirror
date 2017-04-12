@@ -55,7 +55,7 @@ def grade(userid, passwd):
     return [table_heading, table_data]
 
 def gradesAI():
-    S = SpeechAI(0.51)
+    S = SpeechAI()
     record,audio = S.ears()
     course_code = S.recognize(record,audio)
     course_code = course_code.replace(" ",'')
@@ -75,4 +75,5 @@ def gradesAI():
                     g = g.replace('+',' plus')
                     speak("grade is "+g+" and GPA is "+k[5])
 if __name__=="__main__":
+    speak("subject")
     gradesAI()
