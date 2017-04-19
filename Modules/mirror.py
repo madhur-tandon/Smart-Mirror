@@ -35,7 +35,7 @@ def respond(toSpeak, toSend = False):
 class mirror(object):
     def __init__(self):
         self.speech = SpeechAI(0.30)
-        self.face = faceAI.faceAI(camera=0)
+        self.face = faceAI.faceAI(camera=1)
         self.weather = weatherAI.weather()
         self.news = newsAI.news()
         self.maps = mapsAI.maps()
@@ -62,7 +62,8 @@ class mirror(object):
 
         # info of song will be sent by its thread
     def initialize(self):
-        inertia = 0 # inertia for moving from active mode to passive mode
+        inertiaMax = 4
+        inertia = inertiaMax # inertia for moving from active mode to passive mode
         respond(
             False,
             {
@@ -84,6 +85,23 @@ class mirror(object):
                             response = self.weather.findWeather("7-day", LJ)
                         respond(False, response)
                         self.passivePollData[k]["lastDone"] = time.time()
+            else: # active mode
+                if useLaunchPhrase:
+                    record, audio = self.speech.ears()
+                    respond(False, "I'm all ears")
+                    speech = self.speech.recognize(record,audio)
+                    if speech is not None and speech.lower() in launchPhrases:
+                        ack = self.lang.acknowledge()
+                        respond(ack)
+                        action = self.action()
+                else:
+                    action = self.action()
+
+                if action:
+                    inertia = inertiaMax
+                else:
+                    inertia -= 1
+                    print("noo my inertia", inertia)
 
             # inertia logic
             if inertia <= 0 and self.activeMode:
@@ -96,8 +114,8 @@ class mirror(object):
                 )
                 self.activeMode = False
 
-            if self.face.detect_face():
-                inertia = 20
+            if not self.activeMode and self.face.detect_face():
+                inertia = inertiaMax
                 print("Found Face")
                 self.activeMode = True
                 respond(
@@ -107,27 +125,22 @@ class mirror(object):
                         "command": "active-mode"
                     }
                 )
-                if useLaunchPhrase:
-                    record,audio = self.speech.ears()
-                    speech = self.speech.recognize(record,audio)
-                    if speech is not None and speech.lower() in launchPhrases:
-                        ack = self.lang.acknowledge()
-                        respond(ack)
-                        self.action()
-                else:
-                    self.action()
+
+                self.activeMode = True
+
+ 
 
     def action(self):
         record, audio = self.speech.ears()
         speech = self.speech.recognize(record,audio)
 
-        if speech is not None:
+        if speech is not None and speech != []:
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
                                          headers={"Authorization": wit_token})
                 print(r.text)
                 response = json.loads(r.text)
-                entities = None
+                entities = []
 
                 if 'entities' in response:
                     entities = response['entities']
@@ -158,7 +171,12 @@ class mirror(object):
                 respond("I'm Sorry, I couldn't understand what you meant by that")
                 return
 
-            self.action()
+            return True # for a successful interaction
+        elif speech == []:
+            return None
+        else:
+            print("mirror.py: speech is None")
+            return False
 
     def findMaps(self,entities=None):
         if entities is not None:

@@ -1,6 +1,5 @@
 import speech_recognition as speechAI
 import faceAI
-from server import sendToClient
 
 class SpeechAI(object):
     def __init__(self,threshold=0.30,lex=False,phrase="hello"):
@@ -20,18 +19,18 @@ class SpeechAI(object):
                     for i in spoken['alternative']:
                         if 'confidence' not in list(i.keys()):
                             transcript = spoken['alternative'][0]['transcript']
-                            print("YOU SAID "+i['transcript'])
+                            print("YOU SAID " + i['transcript'])
                             return transcript
-                        elif i['confidence']<=min_conf and i['confidence']>=self.threshold:
+                        elif i['confidence'] <= min_conf and i['confidence'] >= self.threshold:
                             min_conf = i['confidence']
                     for i in spoken['alternative']:
-                        if i['confidence']==min_conf:
+                        if i['confidence'] == min_conf:
                             transcript = i['transcript']
-                            print("YOU SAID "+i['transcript'])
+                            print("YOU SAID "+ i['transcript'])
                             break
                 else:
-                    sendToClient("Couldn't Understand")
-                    print("Couldn't Understand")
+                    print("Recongnizer: Nothing Spoken")
+                    return []
             else:
                 min_conf = 1
                 spoken = recognize.recognize_google(audio,language = "en-IN",show_all=True)
@@ -51,19 +50,17 @@ class SpeechAI(object):
                     outcomes.sort()
                     print(outcomes)
                     transcript = outcomes[0]
-                    print("YOU SAID "+transcript)
-                            # transcript = i['transcript']
-                            # print("YOU SAID "+i['transcript'])
-                            # break
+                    print("YOU SAID " + transcript)
                 else:
-                    sendToClient("Couldn't Understand")
-                    print("Couldn't Understand")
+                    print("Recongnizer: Nothing Spoken")
+                    return []
+
         except speechAI.UnknownValueError:
-            sendToClient("Couldn't Understand")
-            print("Couldn't Understand")
+            print("Recongnizer: UnknownValueError")
+            return None
         except speechAI.RequestError as e:
-            sendToClient("Could not request results from Google Speech Recognition service; {0}".format(e))
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            print("Recongnizer: Could not request results from Google Speech Recognition service; {0}".format(e))
+            return None
         return transcript
 
     def ears(self):
@@ -72,8 +69,7 @@ class SpeechAI(object):
         with micro_source as source:
             record.adjust_for_ambient_noise(source,duration=2)
             record.dynamic_energy_threshold = True
-            sendToClient("I am all Ears!")
-            print("I am all Ears!")
+            print("Recognizer: I am all Ears!")
             audio = record.listen(source)
         return record,audio
 
