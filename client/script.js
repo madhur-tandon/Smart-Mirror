@@ -49,7 +49,8 @@ var vm = {
   type: ko.observable("text"),
   json: ko.observable("{}"),
   imageSrc: ko.observable(""),
-  news: ko.observableArray([])
+  news: ko.observableArray([]),
+  mode: ko.observable("passive")
 }
 
 ko.applyBindings(vm)
