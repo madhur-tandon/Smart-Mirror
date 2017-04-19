@@ -1,3 +1,5 @@
+import eventing
+import threading
 import requests
 import json
 import time
@@ -12,11 +14,13 @@ import mapsAI
 import traceback
 import languageAI
 from server import sendToClient, sendJSON
+import datetime
 
 wit_token = "Bearer A5YKQ3WVJPMYBDUA655USHMZ3HHJ4ZQE"
 launchPhrases = ["ok mirror","ok a mirror","okay mirror","okey mirror","ok mera","okay mera","uk mirror"]
 useLaunchPhrase = False
-myName = "Master"
+
+myName = "Boaty McBoatface"
 
 def respond(toSpeak, toSend = False):
     if not toSend and not toSpeak:
@@ -62,8 +66,10 @@ class mirror(object):
 
         # info of song will be sent by its thread
     def initialize(self):
-        inertiaMax = 4
-        inertia = inertiaMax # inertia for moving from active mode to passive mode
+        inertia = 10 # 10 seconds
+        lastSpoken = 0 #used for inertia logic
+        lastFace = 0
+
         respond(
             False,
             {
@@ -71,13 +77,21 @@ class mirror(object):
                 "command": "passive-mode"
             }
         )
-        while True:
-            #sendToClient("")    # Clear Screen
 
+        def init_active_mode():
+            self.activeMode = True
+            respond(
+                "Hi " + random.choice(["pretty", "beautiful", "sexy", "cutie", "handsome", "lovely"]),
+                {
+                    "type": "command",
+                    "command": "active-mode"
+                }
+            )
+
+        def passive_bg_jobs():
             if not self.activeMode: # passive mode
                 for k in self.passivePollData:
                     if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
-                        response = ""
                         if(k == "headlines"):
                             response = self.news.findNews(random.choice(["india", "general", "tech"]))
                         elif(k == "weather"):
@@ -85,7 +99,13 @@ class mirror(object):
                             response = self.weather.findWeather("7-day", LJ)
                         respond(False, response)
                         self.passivePollData[k]["lastDone"] = time.time()
-            else: # active mode
+
+        passiveThread = threading.Thread(target = passive_bg_jobs)
+        passiveThread.daemon = True
+        passiveThread.start()
+
+        while True:
+            if self.activeMode:
                 if useLaunchPhrase:
                     record, audio = self.speech.ears()
                     respond(False, "I'm all ears")
@@ -98,13 +118,10 @@ class mirror(object):
                     action = self.action()
 
                 if action:
-                    inertia = inertiaMax
-                else:
-                    inertia -= 1
-                    print("noo my inertia", inertia)
+                    lastSpoken = time.time()
 
             # inertia logic
-            if inertia <= 0 and self.activeMode:
+            if self.activeMode and time.time() - max(lastFace, lastSpoken) > inertia:
                 respond(
                     False,
                     {
@@ -114,19 +131,11 @@ class mirror(object):
                 )
                 self.activeMode = False
 
-            if not self.activeMode and self.face.detect_face():
-                inertia = inertiaMax
-                print("Found Face")
-                self.activeMode = True
-                respond(
-                    "Hi " + random.choice(["pretty", "beautiful", "sexy", "cutie", "handsome", "lovely"]),
-                    {
-                        "type": "command",
-                        "command": "active-mode"
-                    }
-                )
-
-                self.activeMode = True
+            if self.face.detect_face():
+                lastFace = time.time()
+                if not self.activeMode:
+                    print("Found face")
+                    init_active_mode()
 
  
 
