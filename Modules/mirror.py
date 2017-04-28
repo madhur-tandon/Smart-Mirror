@@ -66,7 +66,7 @@ class mirror(object):
 
         # info of song will be sent by its thread
     def initialize(self):
-        inertia = 10 # 10 seconds
+        inertia = 20 # seconds
         lastSpoken = 0 #used for inertia logic
         lastFace = 0
 
@@ -89,16 +89,17 @@ class mirror(object):
             )
 
         def passive_bg_jobs():
-            if not self.activeMode: # passive mode
-                for k in self.passivePollData:
-                    if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
-                        if(k == "headlines"):
-                            response = self.news.findNews(random.choice(["india", "general", "tech"]))
-                        elif(k == "weather"):
-                            LJ = self.weather.getLocation()
-                            response = self.weather.findWeather("7-day", LJ)
-                        respond(False, response)
-                        self.passivePollData[k]["lastDone"] = time.time()
+            while True:
+                if not self.activeMode: # passive mode
+                    for k in self.passivePollData:
+                        if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
+                            if(k == "headlines"):
+                                response = self.news.findNews(random.choice(["india", "general", "tech"]))
+                            elif(k == "weather"):
+                                LJ = self.weather.getLocation()
+                                response = self.weather.findWeather("7-day", LJ)
+                            respond(False, response)
+                            self.passivePollData[k]["lastDone"] = time.time()
 
         passiveThread = threading.Thread(target = passive_bg_jobs)
         passiveThread.daemon = True
@@ -136,8 +137,6 @@ class mirror(object):
                 if not self.activeMode:
                     print("Found face")
                     init_active_mode()
-
- 
 
     def action(self):
         record, audio = self.speech.ears()

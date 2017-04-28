@@ -18,3 +18,17 @@ body pre {
 	text-align:left;
 	padding-left: 2em;
 }
+
+
+.content {
+  width: 80%;
+  margin: auto;
+}
+
+.news article {
+  padding: 1em;
+}
+
+.news p {
+	padding: 0 1em;
+}

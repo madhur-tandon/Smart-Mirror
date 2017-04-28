@@ -71,6 +71,7 @@ class SpeechAI(object):
             record.dynamic_energy_threshold = True
             print("Recognizer: I am all Ears!")
             audio = record.listen(source)
+            print("Recognizer: Finished listening")
         return record,audio
 
 if __name__=="__main__":

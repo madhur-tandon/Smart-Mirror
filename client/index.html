@@ -1,7 +1,7 @@
 <html>
 <head>
 	<title> Websocks plis </title>
-	<link href="style.css" rel="stylesheet" />
+	<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 	<div data-bind="if: mode() == 'active'">
@@ -14,13 +14,19 @@
 		<div data-bind="if: type() == 'image'">
 			<img data-bind="attr:{src: imageSrc}"/>
 		</div>
-		<div data-bind="if: type() == 'news'"> 
+		<div class="content news" data-bind="if: type() == 'news'">
 			<h1> Recent News </h1>
-			<ul data-bind="foreach: news">
-				<li data-bind="text: title"> </li>
-				<li data-bind="text: description"> </li>
-				<li> <img data-bind="attr: {src: image}" /> </li>
-			</ul>
+			<section data-bind="foreach: news">
+				<article style="display:flex">
+					<img data-bind="attr: {src: image}" style="flex:2"/>
+					<div style="flex:2.5;display: flex; flex-direction: column;">
+						<p style="flex:1"> <b data-bind="text: title"></b> </p>
+						<p
+							data-bind="text: description"
+							style="flex:4"> </p>
+					</div>
+				</article>
+			</section>
 		</div> 
 	</div>
 	<div data-bind="if: mode() == 'passive'">
