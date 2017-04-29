@@ -15,23 +15,37 @@ import datetime
 
 clients = []
 
+def noop(client):
+    print("noop called")
+    pass
+
+# to be filled by the importing module
+handlers = {
+    "message": noop,
+    "connected": noop,
+    "closed": noop
+} 
+
 class SimpleEcho(WebSocket):
 
     def handleMessage(self):
         # echo message back to client
         self.sendMessage(self.data)
+        handlers["message"](self)
 
     def handleConnected(self):
         global clients
 
         clients.append(self)
         print(self.address, 'connected')
+        #handlers["connected"](self)
 
     def handleClose(self):
         global clients
 
         clients.remove(self)
         print(self.address, 'closed')
+        handlers["closed"](self)
 
 
 def websock_server():

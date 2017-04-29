@@ -68,6 +68,18 @@ class weather(object):
         ,"time"
         """
 
+        """
+        clear-day, clear-night
+        rain
+        snow
+        sleet
+        wind
+        fog
+        cloudy
+        partly-cloudy-day
+        partly-cloudy-night
+        """
+
         if intent=="current":
             CW = D['currently']
             temp = ((int(CW['temperature'])-32)*5)/9

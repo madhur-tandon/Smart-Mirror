@@ -1,25 +1,37 @@
 <html>
 <head>
 	<title> Websocks plis </title>
-	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/weather-icons.css" />
+	<link rel="stylesheet" href="css/weather-icons-wind.css" />
 </head>
 <body>
 	<div data-bind="if: mode() == 'active'">
-		<div data-bind="if: type() == 'text'"> 
+		<div class="content news" data-bind="if: type() == 'text'"> 
 			<p data-bind="text: text"></p>
 		</div>
-		<div data-bind="if: type() == 'json'"> 
+		<div class="content json"  data-bind="if: type() == 'json'"> 
 			<pre data-bind="text: json"></pre>
 		</div>
-		<div data-bind="if: type() == 'image'">
+		<div class="content image"  data-bind="if: type() == 'image'">
 			<img data-bind="attr:{src: imageSrc}"/>
+		</div>
+		<div class="content weather" data-bind="if: type() == 'weather'">
+		  <section class="weather-icon" style="display:flex; flex-direction: column; height: 200px; width: 300px;">
+		    <i class="wi wi-day-cloudy-high" style="flex:3; font-size: 5.5em;"></i>
+		    <span style="flex:1; display: flex">
+		      <span style="flex:1">Min temp: 26 deg</span>
+		      <span>Max temp: 31 deg</span>
+		    </span>
+		    <span style="flex:1">Summary</span>
+		  </section>
 		</div>
 		<div class="content news" data-bind="if: type() == 'news'">
 			<h1> Recent News </h1>
 			<section data-bind="foreach: news">
 				<article style="display:flex">
-					<img data-bind="attr: {src: image}" style="flex:2"/>
-					<div style="flex:2.5;display: flex; flex-direction: column;">
+					<span data-bind="style: { backgroundImage: 'url(\'' + image() + '\')' }" style="flex:1;"></span>
+					<div style="flex:1;display: flex; flex-direction: column;">
 						<p style="flex:1"> <b data-bind="text: title"></b> </p>
 						<p
 							data-bind="text: description"

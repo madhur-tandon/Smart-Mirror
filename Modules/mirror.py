@@ -13,7 +13,7 @@ import newsAI
 import mapsAI
 import traceback
 import languageAI
-from server import sendToClient, sendJSON
+from server import sendToClient, sendJSON, handlers
 import datetime
 
 wit_token = "Bearer A5YKQ3WVJPMYBDUA655USHMZ3HHJ4ZQE"
@@ -36,7 +36,26 @@ def respond(toSpeak, toSend = False):
     else:
         sendJSON(toSend)
 
+def onConnected(client):
+    if self.activeMode:
+        respond(
+            False,
+            {
+                "type": "command",
+                "command": "active-mode"
+            }
+        )
+    else:
+        respond(
+            False,
+            {
+                "type": "command",
+                "command": "passive-mode"
+            }
+        )
+
 class mirror(object):
+
     def __init__(self):
         self.speech = SpeechAI(0.30)
         self.face = faceAI.faceAI(camera=1)
@@ -64,9 +83,11 @@ class mirror(object):
             }
         }
 
+        handlers["connected"] = onConnected
+
         # info of song will be sent by its thread
     def initialize(self):
-        inertia = 20 # seconds
+        inertia = 120 # seconds
         lastSpoken = 0 #used for inertia logic
         lastFace = 0
 
@@ -122,6 +143,7 @@ class mirror(object):
                     lastSpoken = time.time()
 
             # inertia logic
+            print("t", time.time() - max(lastFace, lastSpoken))
             if self.activeMode and time.time() - max(lastFace, lastSpoken) > inertia:
                 respond(
                     False,
