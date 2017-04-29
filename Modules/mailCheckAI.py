@@ -23,10 +23,12 @@ def checkMail():
             for response_part in data:
                 if isinstance(response_part, tuple):
                     actualMail = email.message_from_bytes(response_part[1])
+                    """
+                    @Peeyush, Send Subject and From to UI
+                    """
                     print (actualMail['From'])
                     print (actualMail['Subject'])
                     print()
                 mailType, data = mail.store(messages[0].split()[latestMail],'-FLAGS','\\Seen')
             maxShow -= 1
             latestMail -= 1
-checkMail()

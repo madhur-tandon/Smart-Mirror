@@ -178,3 +178,9 @@ class naturalLanguageAI(object):
 
         elif property == "appreciation":
             return random.choice(apprec)
+
+        elif property == "face":
+            """
+            @Peeyush, Send face.gif here to UI
+            """
+            return "Here's my face"

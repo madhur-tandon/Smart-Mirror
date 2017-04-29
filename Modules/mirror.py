@@ -13,6 +13,9 @@ import newsAI
 import mapsAI
 import traceback
 import languageAI
+import mailCheckAI
+import mailAI
+import selfieAI
 from server import sendToClient, sendJSON, handlers
 import datetime
 
@@ -58,7 +61,7 @@ class mirror(object):
 
     def __init__(self):
         self.speech = SpeechAI(0.30)
-        self.face = faceAI.faceAI(camera=1)
+        self.face = faceAI.faceAI(camera=0)
         self.weather = weatherAI.weather()
         self.news = newsAI.news()
         self.maps = mapsAI.maps()
@@ -192,6 +195,8 @@ class mirror(object):
                     self.userStatus(entities)
                 elif "interaction" in entities:
                     self.interaction(entities)
+                elif "transfer" in entities:
+                    self.transferFunctions(entities)
                 else:
                     respond("I'm Sorry, I couldn't understand what you meant by that")
 
@@ -288,6 +293,18 @@ class mirror(object):
             property = entities['interaction'][0]['value']
         phrase = self.lang.interaction(property)
         respond(phrase)
+
+    def transferFunctions(self,entities=None):
+        if entities is not None:
+            intent = entities['transfer'][0]['value']
+            if intent == "check-mail":
+                mailCheckAI.checkMail()
+            elif intent == "send-mail":
+                mailAI.SendMail()
+            elif intent == "selfie":
+                base = "../client/selfies/"
+                selfieAI.capture()
+                selfieAI.SendMail(base+'filename.jpg')
 
 
 if __name__ == "__main__":

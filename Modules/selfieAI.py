@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 import speechRecAI
 from textToSpeechAI import speak
 import time
+import string
 from cv2 import *
 
 S = speechRecAI.SpeechAI(0.55)
@@ -23,6 +24,8 @@ def SendMail(ImgFileName,theft=False):
             speak("Say your Roll Number")
             record,audio = S.ears()
             Roll = S.recognize(record,audio)
+            for i in string.punctuation:
+                Roll=Roll.replace(i,"")
             Roll=Roll.replace(" ","")
         Recipient = D[Roll]
 
@@ -59,11 +62,12 @@ def SendMail(ImgFileName,theft=False):
             s.sendmail(msg['From'], msg['To'], msg.as_string())
         print("Mail Sent")
         s.quit()
-		
+
+"""
 def getImageName():
     base = "../client/selfies/"
-	try:
-		file = open(base + "counter.txt", "r+")
+    try:
+        file = open(base + "counter.txt", "r+")
         counter = int(file.readline())
         counter += 1
         file.seek(0)
@@ -75,24 +79,30 @@ def getImageName():
         file.write("0")
         file.close()
         counter = 0
-    return base + counter + ".jpg" # like 1.jpg, etc
+    return base + str(counter) + ".jpg" # like 1.jpg, etc
+"""
 
 
 def capture(theft=False):
+    base = "../client/selfies/"
     if theft == False:
         for i in range(3,0,-1):
             speak(str(i))
         speak("Cheese!")
         time.sleep(0.5)
         cam = VideoCapture(0)
-        # cam = VideoCapture(0)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")
             imshow("cam-test",img)
-            waitKey(5000)
+            # waitKey(5000)
+            """
+            @Peeyush, Send filename.jpg to UI here
+            for 5 seconds.
+            Also, send a text saying "Mail Sent" to UI
+            """
             destroyWindow("cam-test")
-            imwrite(getImageName(),img)
+            imwrite(base+'filename.jpg',img)
     else:
         cam = VideoCapture(0)
         s, img = cam.read()
@@ -100,9 +110,9 @@ def capture(theft=False):
             namedWindow("cam-test")
             imshow("cam-test",img)
             destroyWindow("cam-test")
-            imwrite(getImageName(),img)
+            imwrite(base+'filename.jpg',img)
 
 if __name__=="__main__":
+    base = "../client/selfies/"
     capture()
-    SendMail('filename.jpg')
- 
+    SendMail(base+'filename.jpg')

@@ -5,6 +5,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from speechRecAI import SpeechAI
 from textToSpeechAI import speak
+import string
 
 S = SpeechAI()
 D = {'2016053':'madhur16053@iiitd.ac.in','2016242':'mandeep16242@iiitd.ac.in','2016199':'siddhant16199@iiitd.ac.in','2016057':'mudit16057@iiitd.ac.in','2016245':'mayank16245@iiitd.ac.in'}
@@ -16,10 +17,15 @@ def SendMail():
     s.ehlo()
     s.login('smart.mirrorai@gmail.com', 'smartmirror23')
     Roll = 'default'
+    """
+    @Peeyush, send Email Subject and Email Body to UI
+    """
     while Roll not in D:
         speak("Say the Roll Number of the Recipient")
         record,audio = S.ears()
         Roll = S.recognize(record,audio)
+        for i in string.punctuation:
+            Roll=Roll.replace(i,"")
         Roll=Roll.replace(" ","")
     Recipient = D[Roll]
     speak("Send Mail to "+Recipient+" ?")
