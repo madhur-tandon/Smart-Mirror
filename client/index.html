@@ -17,6 +17,41 @@
 		<div class="content image"  data-bind="if: type() == 'image'">
 			<img data-bind="attr:{src: imageSrc}"/>
 		</div>
+		<div class="content tic-tac-toe vc-parent"  data-bind="if: type() == 'tic-tac-toe'">
+			<div class="vc-child">
+				<table>
+					<tr><td style="border-top: 0; border-left:0" 
+							data-bind="text: ticTacToe()[0]">
+						<td style="border-top: 0"
+							data-bind="text: ticTacToe()[1]">
+						<td style="border-top: 0; border-right: 0;"
+							data-bind="text: ticTacToe()[2]">
+					</tr>	
+					<tr>
+						<td style="border-left: 0"
+							data-bind="text: ticTacToe()[3]">
+						<td data-bind="text: ticTacToe()[4]">
+						<td style="border-right: 0"
+							data-bind="text: ticTacToe()[5]">
+					</tr>
+					<tr>
+						<td style="border-bottom: 0; border-left: 0" 
+							data-bind="text: ticTacToe()[6]">
+						<td style="border-bottom:0" 
+							data-bind="text: ticTacToe()[7]">
+						<td style="border-bottom: 0; border-right: 0" 
+							data-bind="text: ticTacToe()[8]"></tr>
+				</table>
+			</div>
+		</div>
+		<div class="content quote vc-parent"  data-bind="if: type() == 'quote'">
+			<div class="vc-child">
+				<blockquote>
+					<p data-bind="text: quote().quote"></p>
+					<cite data-bind="text: quote().speaker"></cite>
+				</blockquote>
+			</div>
+		</div>
 		<div class="content weather" data-bind="if: type() == 'weather'">
 			<section class="middling-container">
 		      <!-- ko if: weather.intent() == 'current' -->

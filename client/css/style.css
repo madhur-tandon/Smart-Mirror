@@ -59,3 +59,17 @@ body pre {
 	width: 300px; 
 	margin: auto;
 }
+
+
+.tic-tac-toe table {
+  border-collapse: collapse;
+  margin: auto;
+}
+
+.tic-tac-toe td {
+  font-size: 4em;
+  width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  border: 3px solid white;
+}
