@@ -16,7 +16,7 @@ import languageAI
 import mailCheckAI
 import mailAI
 import selfieAI
-from server import sendToClient, sendJSON, handlers
+from server import sendToClient, sendJSON, setHandler
 import datetime
 
 wit_token = "Bearer A5YKQ3WVJPMYBDUA655USHMZ3HHJ4ZQE"
@@ -39,8 +39,11 @@ def respond(toSpeak, toSend = False):
     else:
         sendJSON(toSend)
 
-def onConnected(client):
-    if self.activeMode:
+activeMode = False
+
+def onConnected():
+    global activeMode
+    if activeMode:
         respond(
             False,
             {
@@ -60,13 +63,14 @@ def onConnected(client):
 class mirror(object):
 
     def __init__(self):
+        global activeMode
         self.speech = SpeechAI(0.30)
-        self.face = faceAI.faceAI(camera=0)
+        self.face = faceAI.faceAI(camera=1)
         self.weather = weatherAI.weather()
         self.news = newsAI.news()
         self.maps = mapsAI.maps()
         self.lang = languageAI.naturalLanguageAI(myName)
-        self.activeMode = False
+        activeMode = False
         self.passivePollData = {
             "headlines": {
                 "refresh": 60*60, #60 minutes
@@ -86,10 +90,11 @@ class mirror(object):
             }
         }
 
-        handlers["connected"] = onConnected
+        setHandler(onConnected)
 
         # info of song will be sent by its thread
     def initialize(self):
+        global activeMode
         inertia = 120 # seconds
         lastSpoken = 0 #used for inertia logic
         lastFace = 0
@@ -103,7 +108,8 @@ class mirror(object):
         )
 
         def init_active_mode():
-            self.activeMode = True
+            global activeMode
+            activeMode = True
             respond(
                 "Hi " + random.choice(["pretty", "beautiful", "sexy", "cutie", "handsome", "lovely"]),
                 {
@@ -113,15 +119,16 @@ class mirror(object):
             )
 
         def passive_bg_jobs():
+            global activeMode
             while True:
-                if not self.activeMode: # passive mode
+                if not activeMode: # passive mode
                     for k in self.passivePollData:
                         if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
                             if(k == "headlines"):
                                 response = self.news.findNews(random.choice(["india", "general", "tech"]))
                             elif(k == "weather"):
                                 LJ = self.weather.getLocation()
-                                response = self.weather.findWeather("7-day", LJ)
+                                response, spk = self.weather.findWeather("7-day", LJ)
                             respond(False, response)
                             self.passivePollData[k]["lastDone"] = time.time()
 
@@ -130,7 +137,7 @@ class mirror(object):
         passiveThread.start()
 
         while True:
-            if self.activeMode:
+            if activeMode:
                 if useLaunchPhrase:
                     record, audio = self.speech.ears()
                     respond(False, "I'm all ears")
@@ -147,7 +154,7 @@ class mirror(object):
 
             # inertia logic
             print("t", time.time() - max(lastFace, lastSpoken))
-            if self.activeMode and time.time() - max(lastFace, lastSpoken) > inertia:
+            if activeMode and time.time() - max(lastFace, lastSpoken) > inertia:
                 respond(
                     False,
                     {
@@ -155,18 +162,18 @@ class mirror(object):
                         "command": "passive-mode"
                     }
                 )
-                self.activeMode = False
+                activeMode = False
 
             if self.face.detect_face():
                 lastFace = time.time()
-                if not self.activeMode:
+                if not activeMode:
                     print("Found face")
                     init_active_mode()
 
     def action(self):
         record, audio = self.speech.ears()
-        speech = self.speech.recognize(record,audio)
-
+        # speech = self.speech.recognize(record,audio)
+        speech = input()
         if speech is not None and speech != []:
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
@@ -237,7 +244,7 @@ class mirror(object):
         apiObject = {"type": "news"}
         if entities is not None:
             intent = entities['news'][0]["value"]
-            print(intent)
+            print("news intent", intent)
             if intent is not None:
                 newsList = self.news.findNews(intent)
                 respond(", ".join(map(lambda x: x["title"], newsList)), {"type": "news", "items": newsList})
@@ -256,19 +263,27 @@ class mirror(object):
                     if i["confidence"] > maxConf:
                         maxConf = i["confidence"]
                         location = i["value"]
-                print(intent)
-                print(location)
                 if location is not None:
                     LJ = self.weather.get_DifferentLocation(location)
-                    response = self.weather.findWeather(intent,LJ)
-                    print(response) #unsure about weather's data structure
+                    response, spk = self.weather.findWeather(intent,LJ)
+                    respond(spk, {
+                        "type": "weather",
+                        "location": location,
+                        "intent": intent,
+                        "data": response
+                    })
                 else:
                     respond("I'm Sorry, I couldn't retrieve weather info at the moment")
             else:
                 intent = entities['weather'][0]["value"]
                 print(intent)
                 LJ = self.weather.getLocation()
-                self.weather.findWeather(intent,LJ)
+                response, spk = self.weather.findWeather(intent, LJ)
+                respond(spk, {
+                    "type": "weather",
+                    "intent": intent,
+                    "data": response
+                })
         else:
             respond("I'm Sorry, I couldn't understand what you meant by that")
 

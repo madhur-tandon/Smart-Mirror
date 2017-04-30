@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title> Websocks plis </title>
+	<meta charset="utf-8">
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/weather-icons.css" />
 	<link rel="stylesheet" href="css/weather-icons-wind.css" />
@@ -17,14 +18,82 @@
 			<img data-bind="attr:{src: imageSrc}"/>
 		</div>
 		<div class="content weather" data-bind="if: type() == 'weather'">
-		  <section class="weather-icon" style="display:flex; flex-direction: column; height: 200px; width: 300px;">
-		    <i class="wi wi-day-cloudy-high" style="flex:3; font-size: 5.5em;"></i>
-		    <span style="flex:1; display: flex">
-		      <span style="flex:1">Min temp: 26 deg</span>
-		      <span>Max temp: 31 deg</span>
-		    </span>
-		    <span style="flex:1">Summary</span>
-		  </section>
+			<section class="middling-container">
+		      <!-- ko if: weather.intent() == 'current' -->
+			  <section class="weather-1-day" style="display:flex; flex-direction: column;">
+			    <i data-bind="attr: {class: 'wi wi-' + weather.data()[0].icon}" style="flex:3; font-size: 5.5em;"></i>
+			    <span style="flex:1">Temperature: <span data-bind="text: weather.data()[0].temperature"></span>℃</span>
+			    <span style="flex:1">Humidity: <span data-bind="text: weather.data()[0].humidity"></span>%</span>
+			    <span style="flex:1">Pressure: <span data-bind="text: weather.data()[0].pressure"></span> millibars</span>
+			  </section>
+		      <!-- /ko -->
+		      <!-- ko if: weather.intent() == 'tomorrow' -->
+			  <section class="weather-1-day" style="display:flex; flex-direction: column;">
+			    <i data-bind="attr: {class: 'wi wi-' + weather.data()[0].icon}" style="flex:3; font-size: 5.5em;"></i>
+			    <span style="flex:1; display: flex">
+			      <span style="flex:1">Min Temp: <span data-bind="text: weather.data()[0].tempMin"></span>℃ </span>
+			      <span style="flex:1">Max Temp: <span data-bind="text: weather.data()[0].tempMax"></span>℃</span>
+			    </span>
+			    <span style="flex:1"><span data-bind="text: weather.data()[0].summary"></span>
+			  </section>
+		      <!-- /ko -->
+		      <!-- ko if: weather.intent() == '3-day' -->
+			  <section class="weather-3-day" style="display:flex;">
+		    	<span style="flex: 1;" class="vc-parent">
+			    	<i data-bind="attr: {class: 'vc-child wi wi-' + weather.data()[0].icon}" style="font-size: 3em;">
+			    		<span style="font-size: 0.2em"><br><span data-bind="text: weather.data()[0].day"></span></span>
+		    		</i>
+	    		</span>
+			  	<section style="flex: 3; display:flex; flex-direction: column;">
+				    <i data-bind="attr: {class: 'wi wi-' + weather.data()[1].icon}" style="flex:3; font-size: 5.5em;"></i>
+				    <span style="flex:1"><span data-bind="text: weather.data()[1].day"></span></span>
+				    <span style="flex:1; display: flex">
+				      <span style="flex:1">Min Temp: <span data-bind="text: weather.data()[1].tempMin"></span>℃ </span>
+				      <span style="flex:1">Max Temp: <span data-bind="text: weather.data()[1].tempMax"></span>℃</span>
+				    </span>
+				    <span style="flex:1;">
+				    	<span data-bind="text: weather.data()[1].summary">
+				    </span>
+			    </section>
+		    	<span style="flex: 1;" class="vc-parent">
+			    	<i data-bind="attr: {class: 'vc-child wi wi-' + weather.data()[0].icon}" style="font-size: 3em;">
+			    		<span style="font-size: 0.2em"><br><span data-bind="text: weather.data()[2].day"></span></span>
+		    		</i>
+	    		</span>
+			  </section>
+		      <!-- /ko -->
+		      <!-- ko if: weather.intent() == '7-day' -->
+			  <section class="weather-7-day" style="display:flex; flex-direction: column;">
+			    <i data-bind="attr: {class: 'vc-child wi wi-' + weather.data()[0].icon}" style="flex:3; font-size: 5.5em;"></i>
+			    <span style="flex:1"><span data-bind="text: weather.data()[0].day"></span></span>
+			    <span style="flex:1; display: flex">
+			      <span style="flex:1">Min Temp: <span data-bind="text: weather.data()[1].tempMin">℃</span>
+			      <span style="flex:1">Max Temp: <span data-bind="text: weather.data()[1].tempMax">℃</span>
+			    </span>
+			    <span style="flex:1;">
+			    	<span data-bind="text: weather.data()[0].summary">
+			    </span>
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+			    	<i data-bind="attr: {class: 'vc-child wi wi-' + icon}" style="font-size: 1.5em; flex: 1">
+			    		<span style="font-size: 0.4em"><br><span data-bind="text: day"></span></span>
+		    		</i>
+	    		</div>
+			  </section>
+		      <!-- /ko -->
+		      <!-- ko if: weather.intent() == 'hourly' -->
+			  <section class="weather-7-day" style="display:flex; flex-direction: column;">
+			    <i data-bind="attr: {class: 'vc-child wi wi-' + weather.data()[0].icon}" style="flex:3; font-size: 5.5em;"></i>
+			    <span style="flex:1"><span data-bind="text: weather.data()[0].hour"></span></span>
+			    <span style="flex:1;">
+			      Temperature: <span data-bind="text: weather.data()[0].temp">℃</span>
+			    </span>
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
+			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.hour"></span></span>
+		    		</i>
+	    		</div>
+			  </section>
+		      <!-- /ko -->
 		</div>
 		<div class="content news" data-bind="if: type() == 'news'">
 			<h1> Recent News </h1>

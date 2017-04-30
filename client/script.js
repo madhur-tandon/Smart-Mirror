@@ -33,6 +33,13 @@ exampleSocket.onmessage = function (event) {
       vm.type("news")
       vm.news(ko.mapping.fromJS(o.items)())
       break;
+    case "weather":
+      vm.type("weather")
+      vm.weather.intent(o.intent)
+      vm.weather.location(o.location? o.location: "")
+      vm.weather.data(o.data instanceof Array? o.data : [o.data])
+      console.log("completed without error")
+      break;
   }
 }
 
@@ -50,7 +57,31 @@ var vm = {
   json: ko.observable("{}"),
   imageSrc: ko.observable(""),
   news: ko.observableArray([]),
-  mode: ko.observable("passive")
+  mode: ko.observable("passive"),
+  weather: {
+    intent: ko.observable(""),
+    location: ko.observable(""),
+    data: ko.observableArray([{
+      tempMin: 1,
+      tempMax: 1,
+      summary: "Ko breaks without this",
+      icon: "",
+      humidity: "",
+      pressure: ""
+    },
+    {
+      tempMin: 1,
+      tempMax: 1,
+      summary: "Ko breaks without this",
+      icon: ""
+    },
+    {
+      tempMin: 1,
+      tempMax: 1,
+      summary: "Ko breaks without this",
+      icon: ""
+    }])
+  }
 }
 
 ko.applyBindings(vm)

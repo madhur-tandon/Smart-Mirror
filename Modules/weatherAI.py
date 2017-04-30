@@ -80,36 +80,84 @@ class weather(object):
         partly-cloudy-night
         """
 
+        def processIcon(icon):
+            if icon == "clear-day":
+                return "day-sunny"
+            elif icon == "clear-night":
+                return "night-clear"
+            elif icon == "partly-cloudy-day":
+                return "day-cloudy"
+            elif icon == "partly-cloudy-night":
+                return "night-partly-cloudy"
+            else:
+                return icon
+
         if intent=="current":
             CW = D['currently']
-            temp = ((int(CW['temperature'])-32)*5)/9
-            print(CW['summary'],"%.2f" % temp,CW['icon'],CW['humidity'],CW['pressure'],self.UNIX_to_Time(CW['time']))
+            temp = round(((int(CW['temperature'])-32)*5)/9, 2)
+            # print(CW['summary'],"%.2f" % temp,CW['icon'],CW['humidity'],CW['pressure'],self.UNIX_to_Time(CW['time']))
+            return {
+                "temperature": temp,
+                "humidity": CW['humidity'] * 100,
+                "pressure": CW['pressure'],
+                "icon": processIcon(CW["icon"])
+            }, CW['summary']
         elif intent=="tomorrow":
             CW = D['daily']['data']
             tomData = CW[1]
-            tempMin = ((int(tomData['temperatureMin'])-32)*5)/9
-            tempMax = ((int(tomData['temperatureMax'])-32)*5)/9
-            print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+            tempMin = round(((int(tomData['temperatureMin'])-32)*5)/9, 2)
+            tempMax = round(((int(tomData['temperatureMax'])-32)*5)/9, 2)
+            # print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+            return {
+                "summary": tomData["summary"],
+                "tempMin": tempMin,
+                "tempMax": tempMax,
+                "icon": processIcon(tomData["icon"])
+            }, tomData["summary"]
         elif intent=="3-day":
             CW = D['daily']['data']
+            toReturn = []
             for i in range(0,3):
                 tomData = CW[i]
-                tempMin = ((int(tomData['temperatureMin'])-32)*5)/9
-                tempMax = ((int(tomData['temperatureMax'])-32)*5)/9
-                print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+                tempMin = round(((int(tomData['temperatureMin'])-32)*5)/9, 2)
+                tempMax = round(((int(tomData['temperatureMax'])-32)*5)/9, 2)
+                toReturn.append({
+                    "tempMin": tempMin,
+                    "tempMax": tempMax,
+                    "icon": processIcon(tomData["icon"]),
+                    "day": time.strftime("%A", time.localtime(tomData['time']))
+                })
+                # print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+            return toReturn, CW[0]['summary']
         elif intent=="7-day":
             CW = D['daily']['data']
+            toReturn = []
             for i in range(0,8):
                 tomData = CW[i]
-                tempMin = ((int(tomData['temperatureMin'])-32)*5)/9
-                tempMax = ((int(tomData['temperatureMax'])-32)*5)/9
-                print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+                tempMin = round(((int(tomData['temperatureMin'])-32)*5)/9, 2)
+                tempMax = round(((int(tomData['temperatureMax'])-32)*5)/9, 2)
+                toReturn.append({
+                    "tempMin": tempMin,
+                    "tempMax": tempMax,
+                    "icon": processIcon(tomData["icon"]),
+                    "day": time.strftime("%A", time.localtime(tomData['time']))
+                })
+                # print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
+            return toReturn, CW[0]['summary']
         elif intent=="hourly":
             CW = D['hourly']['data']
+            toReturn = []
             for i in range(0,6):
                 hourData = CW[i]
-                temp = ((int(hourData['temperature'])-32)*5)/9
-                print(hourData['summary'],"%.2f" % temp,hourData['icon'],hourData['humidity'],hourData['pressure'],self.UNIX_to_Time(hourData['time']))
+                temp = round(((int(hourData['temperature'])-32)*5)/9, 2)
+                toReturn.append({
+                    "temp": temp,
+                    "hour": time.strftime("%I%p", time.localtime(hourData['time'])).strip("0"),
+                    "icon": processIcon(hourData["icon"])
+                })
+                print(hourData)
+                # print(hourData['summary'],"%.2f" % temp,hourData['icon'],hourData['humidity'],hourData['pressure'],self.UNIX_to_Time(hourData['time']))
+            return toReturn, CW[0]['summary']
 
 if __name__ == "__main__":
     W = weather()
