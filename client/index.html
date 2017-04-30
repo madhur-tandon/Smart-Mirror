@@ -67,15 +67,15 @@
 			    <i data-bind="attr: {class: 'vc-child wi wi-' + weather.data()[0].icon}" style="flex:3; font-size: 5.5em;"></i>
 			    <span style="flex:1"><span data-bind="text: weather.data()[0].day"></span></span>
 			    <span style="flex:1; display: flex">
-			      <span style="flex:1">Min Temp: <span data-bind="text: weather.data()[1].tempMin">℃</span>
-			      <span style="flex:1">Max Temp: <span data-bind="text: weather.data()[1].tempMax">℃</span>
+			      <span style="flex:1">Min Temp: <span data-bind="text: weather.data()[0].tempMin">℃</span>
+			      <span style="flex:1">Max Temp: <span data-bind="text: weather.data()[0].tempMax">℃</span>
 			    </span>
 			    <span style="flex:1;">
 			    	<span data-bind="text: weather.data()[0].summary">
 			    </span>
 		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
-			    	<i data-bind="attr: {class: 'vc-child wi wi-' + icon}" style="font-size: 1.5em; flex: 1">
-			    		<span style="font-size: 0.4em"><br><span data-bind="text: day"></span></span>
+			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
+			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.day"></span></span>
 		    		</i>
 	    		</div>
 			  </section>

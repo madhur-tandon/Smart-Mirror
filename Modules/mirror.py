@@ -31,13 +31,14 @@ def respond(toSpeak, toSend = False):
     elif not toSend:
         toSend = toSpeak
 
-    if toSpeak:
-        speak(toSpeak)
-
     if (isinstance(toSend, str)):
         sendToClient(toSend)
     else:
         sendJSON(toSend)
+
+    if toSpeak:
+        speak(toSpeak)
+
 
 activeMode = False
 

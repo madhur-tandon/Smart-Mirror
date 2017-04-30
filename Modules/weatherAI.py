@@ -128,7 +128,7 @@ class weather(object):
                     "day": time.strftime("%A", time.localtime(tomData['time']))
                 })
                 # print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
-            return toReturn, CW[0]['summary']
+            return toReturn, CW[2]['summary'] + " by " + toReturn[2]["day"]
         elif intent=="7-day":
             CW = D['daily']['data']
             toReturn = []
@@ -143,7 +143,7 @@ class weather(object):
                     "day": time.strftime("%A", time.localtime(tomData['time']))
                 })
                 # print(tomData['summary'],"%.2f" % tempMin,"%.2f" % tempMax,tomData['icon'],tomData['humidity'],tomData['pressure'],self.UNIX_to_Time(tomData['time']))
-            return toReturn, CW[0]['summary']
+            return toReturn,  CW[7]['summary'] + " by " + toReturn[7]["day"]
         elif intent=="hourly":
             CW = D['hourly']['data']
             toReturn = []
@@ -157,7 +157,7 @@ class weather(object):
                 })
                 print(hourData)
                 # print(hourData['summary'],"%.2f" % temp,hourData['icon'],hourData['humidity'],hourData['pressure'],self.UNIX_to_Time(hourData['time']))
-            return toReturn, CW[0]['summary']
+            return toReturn, CW[5]['summary'] + " by " + toReturn[5]["hour"]
 
 if __name__ == "__main__":
     W = weather()
