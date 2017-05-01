@@ -173,8 +173,8 @@ class mirror(object):
 
     def action(self):
         record, audio = self.speech.ears()
-        # speech = self.speech.recognize(record,audio)
-        speech = input()
+        speech = self.speech.recognize(record,audio)
+        # speech = input()
         if speech is not None and speech != []:
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,

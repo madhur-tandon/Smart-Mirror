@@ -6,9 +6,9 @@ from email.mime.multipart import MIMEMultipart
 from speechRecAI import SpeechAI
 from textToSpeechAI import speak
 import string
+from studentEmailDb import dict as emails
 
 S = SpeechAI()
-D = {'2016053':'madhur16053@iiitd.ac.in','2016242':'mandeep16242@iiitd.ac.in','2016199':'siddhant16199@iiitd.ac.in','2016057':'mudit16057@iiitd.ac.in','2016245':'mayank16245@iiitd.ac.in'}
 
 def SendMail():
     s = smtplib.SMTP('smtp.gmail.com', 587)
@@ -20,25 +20,25 @@ def SendMail():
     """
     @Peeyush, send Email Subject and Email Body to UI
     """
-    while Roll not in D:
+    while Roll not in emails:
         speak("Say the Roll Number of the Recipient")
         record,audio = S.ears()
         Roll = S.recognize(record,audio)
         for i in string.punctuation:
             Roll=Roll.replace(i,"")
         Roll=Roll.replace(" ","")
-    Recipient = D[Roll]
-    speak("Send Mail to "+Recipient+" ?")
+    Recipient = emails[Roll]["email"]
+    speak("Send Mail to "+ emails[Roll]["name"]+" ?")
 
     speak("Say The Subject")
     record,audio = S.ears()
     sub = S.recognize(record,audio)
-    print("Subject : "+sub)
+    print("Subject : "+ sub)
 
     speak("Say The Content")
     record,audio = S.ears()
     content = S.recognize(record,audio)
-    print("Content : "+content)
+    print("Content : "+ content)
 
     msg = MIMEMultipart()
     msg['Subject'] = sub

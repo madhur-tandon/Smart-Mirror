@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div data-bind="if: mode() == 'active'">
-		<div class="content news" data-bind="if: type() == 'text'"> 
+		<div class="content text" data-bind="if: type() == 'text'"> 
 			<p data-bind="text: text"></p>
 		</div>
 		<div class="content json"  data-bind="if: type() == 'json'"> 
@@ -108,7 +108,7 @@
 			    <span style="flex:1;">
 			    	<span data-bind="text: weather.data()[0].summary">
 			    </span>
-		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data().slice(1)">
 			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
 			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.day"></span></span>
 		    		</i>
@@ -122,7 +122,7 @@
 			    <span style="flex:1;">
 			      Temperature: <span data-bind="text: weather.data()[0].temp">℃</span>
 			    </span>
-		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data().slice(1)">
 			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
 			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.hour"></span></span>
 		    		</i>
