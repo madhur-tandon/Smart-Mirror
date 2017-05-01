@@ -6,16 +6,7 @@ import time
 import random
 from textToSpeechAI import speak
 from speechRecAI import SpeechAI
-import faceAI
 import time
-import weatherAI
-import newsAI
-import mapsAI
-import traceback
-import languageAI
-import mailCheckAI
-import mailAI
-import selfieAI
 from server import sendToClient, sendJSON, setHandler
 import datetime
 
@@ -47,6 +38,15 @@ def respond(toSpeak, toSend = False):
         speak(toSpeak)
 
 import ticTacToeAI
+import weatherAI
+import newsAI
+import mapsAI
+import traceback
+import languageAI
+import mailCheckAI
+import mailAI
+import selfieAI
+import faceAI
 
 activeMode = False
 
@@ -186,8 +186,8 @@ class mirror(object):
 
     def action(self):
         record, audio = self.speech.ears()
-        # speech = self.speech.recognize(record,audio)
-        speech = input()
+        speech = self.speech.recognize(record,audio)
+        # speech = input()
         if speech is not None and speech != "":
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
@@ -336,6 +336,10 @@ class mirror(object):
                 mailAI.SendMail()
             elif intent == "selfie":
                 selfieAI.capture()
+                respond("You can have this image e-mailed to you. Or say cancel.", {
+                    "type": "image",
+                    "src": "selfies/filename.jpg" 
+                })
                 selfieAI.SendMail('../client/selfies/filename.jpg')
 
     def miscFunctions(self, entities=None):

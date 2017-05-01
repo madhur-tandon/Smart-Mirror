@@ -11,6 +11,7 @@ from studentEmailDb import dict as emails
 import mirror
 
 respond = mirror.respond
+send = mirror.send
 
 S = speechRecAI.SpeechAI(0.55)
 
@@ -22,8 +23,10 @@ def SendMail(ImgFileName, theft=False):
     s.login('smart.mirrorai@gmail.com', 'smartmirror23')
     if theft == False:
         Roll = 'default'
-        while Roll not in emails:
-            respond("Say your Roll Number")
+        while Roll not in emails or Roll.lower() != "cancel":
+            if Roll.lower() == "cancel":
+                return
+            respond("Say your Roll Number", False)
             record, audio = S.ears()
             Roll = S.recognize(record,audio)
             for i in string.punctuation:
@@ -92,7 +95,7 @@ def capture(theft=False):
             respond(str(i))
         respond("Say cheese!")
         time.sleep(0.5)
-        cam = VideoCapture(0)
+        cam = VideoCapture(1)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")
@@ -106,7 +109,7 @@ def capture(theft=False):
             destroyWindow("cam-test")
             imwrite(base+'filename.jpg',img)
     else:
-        cam = VideoCapture(0)
+        cam = VideoCapture(1)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")

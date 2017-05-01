@@ -15,7 +15,9 @@
 			<pre data-bind="text: json"></pre>
 		</div>
 		<div class="content image"  data-bind="if: type() == 'image'">
-			<img data-bind="attr:{src: imageSrc}"/>
+			<div class="vc-child">
+				<img data-bind="attr:{src: imageSrc}"/>
+			</div>
 		</div>
 		<div class="content tic-tac-toe vc-parent"  data-bind="if: type() == 'tic-tac-toe'">
 			<div class="vc-child">
