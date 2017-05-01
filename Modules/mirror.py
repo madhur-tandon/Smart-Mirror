@@ -24,6 +24,16 @@ launchPhrases = ["ok mirror","ok a mirror","okay mirror","okey mirror","ok mera"
 useLaunchPhrase = False
 
 myName = "Boaty McBoatface"
+theftMode = False
+
+def send(toSend):
+    if (isinstance(toSend, str)):
+        sendJSON({
+            "type": "text",
+            "text": toSend
+        })
+    else:
+        sendJSON(toSend)
 
 def respond(toSpeak, toSend = False):
     if not toSend and not toSpeak:
@@ -31,14 +41,12 @@ def respond(toSpeak, toSend = False):
     elif not toSend:
         toSend = toSpeak
 
-    if (isinstance(toSend, str)):
-        sendToClient(toSend)
-    else:
-        sendJSON(toSend)
+    send(toSend)
 
     if toSpeak:
         speak(toSpeak)
 
+import ticTacToeAI
 
 activeMode = False
 
@@ -166,6 +174,11 @@ class mirror(object):
                 activeMode = False
 
             if self.face.detect_face():
+                if theftMode:
+                    selfieAI.SendMail('../client/selfies/filename.jpg', True)
+                    self.toggleTheftMode()
+                    return # let the regular mirror operation work, don't greet the user. 
+
                 lastFace = time.time()
                 if not activeMode:
                     print("Found face")
@@ -173,9 +186,9 @@ class mirror(object):
 
     def action(self):
         record, audio = self.speech.ears()
-        speech = self.speech.recognize(record,audio)
-        # speech = input()
-        if speech is not None and speech != []:
+        # speech = self.speech.recognize(record,audio)
+        speech = input()
+        if speech is not None and speech != "":
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
                                          headers={"Authorization": wit_token})
@@ -205,6 +218,10 @@ class mirror(object):
                     self.interaction(entities)
                 elif "transfer" in entities:
                     self.transferFunctions(entities)
+                elif "theft" in entities:
+                    self.toggleTheftMode()
+                elif "misc" in entities:
+                    self.miscFunctions(entities)
                 else:
                     respond("I'm Sorry, I couldn't understand what you meant by that")
 
@@ -215,7 +232,7 @@ class mirror(object):
                 return
 
             return True # for a successful interaction
-        elif speech == []:
+        elif speech == "":
             return None
         else:
             print("mirror.py: speech is None")
@@ -318,10 +335,20 @@ class mirror(object):
             elif intent == "send-mail":
                 mailAI.SendMail()
             elif intent == "selfie":
-                base = "../client/selfies/"
                 selfieAI.capture()
-                selfieAI.SendMail(base+'filename.jpg')
+                selfieAI.SendMail('../client/selfies/filename.jpg')
 
+    def miscFunctions(self, entities=None):
+        if entities is not None:
+            intent = entities['misc'][0]['value']
+            if intent == "game":
+                ticTacToeAI.reset()
+                ticTacToeAI.game()
+
+
+    def toggleTheftMode(self):
+        global theftMode
+        theftMode = not theftMode
 
 if __name__ == "__main__":
     M = mirror()

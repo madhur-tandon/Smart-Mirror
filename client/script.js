@@ -40,6 +40,9 @@ exampleSocket.onmessage = function (event) {
       vm.weather.data(o.data instanceof Array? o.data : [o.data])
       console.log("completed without error")
       break;
+    case "tic-tac-toe":
+      vm.type("tic-tac-toe")
+      vm.ticTacToe(o.data)
   }
 }
 
@@ -81,7 +84,8 @@ var vm = {
       summary: "Ko breaks without this",
       icon: ""
     }])
-  }
+  },
+  ticTacToe: ko.observableArray(["", "", "", "", "", "", "", "", ""])
 }
 
 ko.applyBindings(vm)

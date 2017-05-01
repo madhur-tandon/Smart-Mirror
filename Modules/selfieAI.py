@@ -4,15 +4,17 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 import speechRecAI
-from textToSpeechAI import speak
 import time
 import string
 from cv2 import *
 from studentEmailDb import dict as emails
+import mirror
+
+respond = mirror.respond
 
 S = speechRecAI.SpeechAI(0.55)
 
-def SendMail(ImgFileName,theft=False):
+def SendMail(ImgFileName, theft=False):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.ehlo()
     s.starttls()
@@ -21,7 +23,7 @@ def SendMail(ImgFileName,theft=False):
     if theft == False:
         Roll = 'default'
         while Roll not in emails:
-            speak("Say your Roll Number")
+            respond("Say your Roll Number")
             record, audio = S.ears()
             Roll = S.recognize(record,audio)
             for i in string.punctuation:
@@ -87,8 +89,8 @@ def capture(theft=False):
     base = "../client/selfies/"
     if theft == False:
         for i in range(3,0,-1):
-            speak(str(i))
-        speak("Cheese!")
+            respond(str(i))
+        respond("Say cheese!")
         time.sleep(0.5)
         cam = VideoCapture(0)
         s, img = cam.read()

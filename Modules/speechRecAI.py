@@ -30,7 +30,7 @@ class SpeechAI(object):
                             break
                 else:
                     print("Recongnizer: Nothing Spoken")
-                    return []
+                    return ""
             else:
                 min_conf = 1
                 spoken = recognize.recognize_google(audio,language = "en-IN",show_all=True)
@@ -53,7 +53,7 @@ class SpeechAI(object):
                     print("YOU SAID " + transcript)
                 else:
                     print("Recongnizer: Nothing Spoken")
-                    return []
+                    return ""
 
         except speechAI.UnknownValueError:
             print("Recongnizer: UnknownValueError")
