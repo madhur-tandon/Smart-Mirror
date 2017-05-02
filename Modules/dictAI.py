@@ -1,28 +1,31 @@
 from PyDictionary import PyDictionary
-# from subprocess import call
-import speechRecAI
-from textToSpeechAI import speak
+import mirror
 
-from mirror import respond
+def meaning(phrase):
+    try:
+        index = phrase.rfind(" ")
+        word = phrase[index+1:]
+        print(word)
 
-def meaning(word):
-    dictionary=PyDictionary()
-    d = dictionary.meaning(word)
-    toRespond = []
-    for i in d:
-        toRespond.append({
-            "type": i,
-            "meanings": []
+        dictionary=PyDictionary()
+        d = dictionary.meaning(word)
+
+        toRespond = []
+
+        for i in d:
+            toRespond.append({
+                "type": i,
+                "meanings": []
+            })
+
+            for j in d[i]:
+                toRespond[-1]["meanings"].append(j)
+
+        mirror.respond(word, {
+            "type": "dictionary",
+            "word": word,
+            "meanings": toRespond
         })
 
-        for j in d[i]:
-            toRespond[-1]["meanings"].append(j)
-
-    respond(word, {
-        "type": "dictionary",
-        "word": word,
-        "meanings": toRespond
-    })
-
-if __name__=="__main__":
-    meaning("silent")
+    except Exception as e:
+        mirror.respond("I'm Sorry, I couldn't understand what you meant by that")

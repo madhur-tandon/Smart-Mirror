@@ -9,8 +9,6 @@ import string
 from studentEmailDb import dict as emails
 
 import mirror
-respond = mirror.respond
-send = mirror.send
 import time
 
 S = SpeechAI()
@@ -22,9 +20,13 @@ def SendMail():
     s.ehlo()
     s.login('smart.mirrorai@gmail.com', 'smartmirror23')
     Roll = 'default'
-    """
-    @Peeyush, send Email Subject and Email Body to UI
-    """
+    mirror.send({
+        "type": "send-mail",
+        "recipient": "",
+        "subject": "",
+        "body": ""
+    })
+
     while Roll not in emails:
         speak("Say the Roll Number of the Recipient")
         record,audio = S.ears()
@@ -35,7 +37,7 @@ def SendMail():
     Recipient = emails[Roll]["email"]
     speak("Sending a mail to "+ emails[Roll]["name"])
 
-    send({
+    mirror.send({
         "type": "send-mail",
         "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
         "subject": "",
@@ -47,7 +49,7 @@ def SendMail():
     sub = S.recognize(record,audio)
     print("Subject : "+ sub)
 
-    send({
+    mirror.send({
         "type": "send-mail",
         "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
         "subject": sub,
@@ -59,7 +61,7 @@ def SendMail():
     content = S.recognize(record,audio)
     print("Content : "+ content)
 
-    send({
+    mirror.send({
         "type": "send-mail",
         "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
         "subject": sub,

@@ -37,7 +37,15 @@ def respond(toSpeak, toSend = False):
     if toSpeak:
         speak(toSpeak)
 
-import ticTacToeAI
+import weatherAI
+import newsAI
+import mapsAI
+import traceback
+import languageAI
+import mailCheckAI
+import mailAI
+import selfieAI
+import dictAI
 import weatherAI
 import newsAI
 import mapsAI
@@ -47,7 +55,6 @@ import mailCheckAI
 import mailAI
 import selfieAI
 import faceAI
-
 activeMode = False
 
 def onConnected():
@@ -177,7 +184,7 @@ class mirror(object):
                 if theftMode:
                     selfieAI.SendMail('../client/selfies/filename.jpg', True)
                     self.toggleTheftMode()
-                    return # let the regular mirror operation work, don't greet the user. 
+                    return # let the regular mirror operation work, don't greet the user.
 
                 lastFace = time.time()
                 if not activeMode:
@@ -189,6 +196,7 @@ class mirror(object):
         speech = self.speech.recognize(record,audio)
         # speech = input()
         if speech is not None and speech != "":
+
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
                                          headers={"Authorization": wit_token})
@@ -218,6 +226,8 @@ class mirror(object):
                     self.interaction(entities)
                 elif "transfer" in entities:
                     self.transferFunctions(entities)
+                elif "information" in entities:
+                    self.info(response)
                 elif "theft" in entities:
                     self.toggleTheftMode()
                 elif "misc" in entities:
@@ -339,7 +349,7 @@ class mirror(object):
                 selfieAI.capture()
                 respond("You can have this image e-mailed to you. Or say cancel.", {
                     "type": "image",
-                    "src": "selfies/filename.jpg" 
+                    "src": "selfies/filename.jpg"
                 })
                 selfieAI.SendMail('../client/selfies/filename.jpg')
 
@@ -350,6 +360,11 @@ class mirror(object):
                 ticTacToeAI.reset()
                 ticTacToeAI.game()
 
+    def info(self,response = None):
+        if response is not None:
+            intent  = response["entities"]['information'][0]['value']
+            if intent == "dict":
+                dictAI.meaning(response["_text"])
 
     def toggleTheftMode(self):
         global theftMode
