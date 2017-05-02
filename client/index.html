@@ -49,8 +49,8 @@
 		<div class="content quote vc-parent"  data-bind="if: type() == 'quote'">
 			<div class="vc-child">
 				<blockquote>
-					<p data-bind="text: quote().quote"></p>
-					<cite data-bind="text: quote().speaker"></cite>
+					<p data-bind="text: quote.quote"></p>
+					<cite data-bind="text: quote.author"></cite>
 				</blockquote>
 			</div>
 		</div>
@@ -166,7 +166,7 @@
 					<p data-bind="text: wikipedia.summary"></p>
 				</div>
 			</section>
-		</div> 
+		</div>
 		<div class="content wikipedia vc-parent" data-bind="if: type() == 'send-mail'">
 			<section class="vc-child" style="text-align: justify; padding: 0 20%">
 				<p>To: <span data-bind="text: smail.recipient"></span></p>
@@ -179,7 +179,7 @@
 	</div>
 	<div data-bind="if: mode() == 'passive'">
 		<div> 
-			<h1> Recent News </h1>
+			<h1>Recent News</h1>
 			<ul data-bind="foreach: news">
 				<li data-bind="text: title"> </li>
 			</ul>

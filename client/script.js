@@ -60,6 +60,11 @@ exampleSocket.onmessage = function (event) {
       vm.smail.body(o.body)
       vm.type("send-mail")
       break;
+    case "quote":
+      vm.quote.quote(o.quote)
+      vm.quote.author(o.author)
+      vm.type("quote")
+      break;
   }
 }
 
@@ -113,6 +118,10 @@ var vm = {
     recipient: ko.observable(""),
     subject: ko.observable(""),
     body: ko.observable("")
+  },
+  quote: {
+    quote: ko.observable(""),
+    author: ko.observable("")
   }
 }
 

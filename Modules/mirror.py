@@ -55,6 +55,7 @@ import mailCheckAI
 import mailAI
 import selfieAI
 import faceAI
+import QuotesAI
 activeMode = False
 
 def onConnected():
@@ -359,6 +360,8 @@ class mirror(object):
             if intent == "game":
                 ticTacToeAI.reset()
                 ticTacToeAI.game()
+            elif intent == "quote":
+                QuotesAI.Quotes()
 
     def info(self,response = None):
         if response is not None:

@@ -5,6 +5,8 @@ from speechRecAI import SpeechAI
 from textToSpeechAI import speak
 from random import randint
 
+import mirror
+
 S = SpeechAI()
 def Quotes():
     random_number = randint(2, 50)
@@ -28,15 +30,16 @@ def Quotes():
             quotes.append(array)
     length = len(quotes)
     x = randint(0, length-1)
-    """
-    @Peeyush, Send the quote and it's authour to
-    UI here
-    """
-    quotes[x][0] = quotes[x][0].replace("\n","")
-    print(quotes[x][0])
-    quotes[x][1] = quotes[x][1].replace("\n","")
-    print(quotes[x][1])
 
+    quote = " ".join(quotes[x][0].replace("\n","").split(" "))
+    author = " ".join(quotes[x][1].replace("\n","").split(" "))
+
+    mirror.respond(quote + ". " + author, {
+        "type": "quote",
+        "quote": quote,
+        "author": author 
+    })
+    print("quote", quote, author)
 
 if __name__=="__main__":
     Quotes()
