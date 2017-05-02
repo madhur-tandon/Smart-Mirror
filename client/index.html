@@ -167,6 +167,15 @@
 				</div>
 			</section>
 		</div> 
+		<div class="content wikipedia vc-parent" data-bind="if: type() == 'send-mail'">
+			<section class="vc-child" style="text-align: justify; padding: 0 20%">
+				<p>To: <span data-bind="text: smail.recipient"></span></p>
+				<p>Subject: <span data-bind="text: smail.subject"></span></p>
+				<div>
+					<p data-bind="text: smail.body"></p>
+				</div>
+			</section>
+		</div> 
 	</div>
 	<div data-bind="if: mode() == 'passive'">
 		<div> 

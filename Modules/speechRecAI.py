@@ -64,13 +64,22 @@ class SpeechAI(object):
         return transcript
 
     def ears(self):
+        import mirror
         micro_source = speechAI.Microphone()
         record = speechAI.Recognizer()
         with micro_source as source:
             record.adjust_for_ambient_noise(source,duration=2)
             record.dynamic_energy_threshold = True
             print("Recognizer: I am all Ears!")
+            mirror.send({
+                "type": "op-status",
+                "status": "listening"
+            })
             audio = record.listen(source)
+            mirror.send({
+                "type": "op-status",
+                "status": "finished-listening"
+            })
             print("Recognizer: Finished listening")
         return record,audio
 

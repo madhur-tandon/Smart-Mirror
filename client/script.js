@@ -54,6 +54,12 @@ exampleSocket.onmessage = function (event) {
       vm.dictionary.summary(o.summary)
       vm.type("wikipedia")
       break;
+    case "send-mail":
+      vm.smail.recipient(o.recipient)
+      vm.smail.subject(o.subject)
+      vm.smail.body(o.body)
+      vm.type("send-mail")
+      break;
   }
 }
 
@@ -98,10 +104,15 @@ var vm = {
   },
   ticTacToe: ko.observableArray(["", "", "", "", "", "", "", "", ""]),
   dictionary: {
-    word: ko.observable("word"), meanings: ko.observableArray([{"type": "Adjective", meanings: ["hi", "hi2"]}])},
+    word: ko.observable("Test word"), meanings: ko.observableArray([{"type": "Test Adjective", meanings: ["hi", "hi2"]}])},
   wikipedia: {
-    word: ko.observable("Some word"),
-    summary: ko.observable("Summary")
+    word: ko.observable("Test word"),
+    summary: ko.observable("Test Summary")
+  },
+  smail: {
+    recipient: ko.observable(""),
+    subject: ko.observable(""),
+    body: ko.observable("")
   }
 }
 

@@ -1,6 +1,8 @@
 import random
 import datetime
 
+from mirror import send
+
 class naturalLanguageAI(object):
     def __init__(self,userName=None):
         if userName is None:
@@ -183,4 +185,7 @@ class naturalLanguageAI(object):
             """
             @Peeyush, Send face.gif here to UI
             """
-            return "Here's my face"
+            send({
+                "type": "image",
+                "src": "face.gif" 
+            })

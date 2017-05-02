@@ -5,7 +5,7 @@ import json
 import time
 import random
 from textToSpeechAI import speak
-from speechRecAI import SpeechAI
+import speechRecAI
 import time
 from server import sendToClient, sendJSON, setHandler
 import datetime
@@ -73,7 +73,7 @@ class mirror(object):
 
     def __init__(self):
         global activeMode
-        self.speech = SpeechAI(0.30)
+        self.speech = speechRecAI.SpeechAI(0.30)
         self.face = faceAI.faceAI(camera=1)
         self.weather = weatherAI.weather()
         self.news = newsAI.news()
@@ -325,7 +325,8 @@ class mirror(object):
         if entities is not None:
             property = entities['interaction'][0]['value']
         phrase = self.lang.interaction(property)
-        respond(phrase)
+        if phrase is not None:
+            respond(phrase)
 
     def transferFunctions(self,entities=None):
         if entities is not None:

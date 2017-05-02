@@ -8,6 +8,11 @@ from textToSpeechAI import speak
 import string
 from studentEmailDb import dict as emails
 
+import mirror
+respond = mirror.respond
+send = mirror.send
+import time
+
 S = SpeechAI()
 
 def SendMail():
@@ -28,17 +33,40 @@ def SendMail():
             Roll=Roll.replace(i,"")
         Roll=Roll.replace(" ","")
     Recipient = emails[Roll]["email"]
-    speak("Send Mail to "+ emails[Roll]["name"]+" ?")
+    speak("Sending a mail to "+ emails[Roll]["name"])
+
+    send({
+        "type": "send-mail",
+        "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
+        "subject": "",
+        "body": ""
+    })
 
     speak("Say The Subject")
     record,audio = S.ears()
     sub = S.recognize(record,audio)
     print("Subject : "+ sub)
 
+    send({
+        "type": "send-mail",
+        "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
+        "subject": sub,
+        "body": ""
+    })
+
     speak("Say The Content")
     record,audio = S.ears()
     content = S.recognize(record,audio)
     print("Content : "+ content)
+
+    send({
+        "type": "send-mail",
+        "recipient": emails[Roll]["name"] + " " + "<" + emails[Roll]["email"] + ">",
+        "subject": sub,
+        "body": content
+    })
+
+    time.sleep(3)
 
     msg = MIMEMultipart()
     msg['Subject'] = sub
