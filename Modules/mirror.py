@@ -16,6 +16,7 @@ import languageAI
 import mailCheckAI
 import mailAI
 import selfieAI
+import dictAI
 from server import sendToClient, sendJSON, setHandler
 import datetime
 
@@ -66,7 +67,7 @@ class mirror(object):
     def __init__(self):
         global activeMode
         self.speech = SpeechAI(0.30)
-        self.face = faceAI.faceAI(camera=1)
+        self.face = faceAI.faceAI(camera=0)
         self.weather = weatherAI.weather()
         self.news = newsAI.news()
         self.maps = mapsAI.maps()
@@ -173,8 +174,8 @@ class mirror(object):
 
     def action(self):
         record, audio = self.speech.ears()
-        # speech = self.speech.recognize(record,audio)
-        speech = input()
+        speech = self.speech.recognize(record,audio)
+        # speech = input()
         if speech is not None and speech != []:
             try:
                 r = requests.get('https://api.wit.ai/message?v=20170303&q=%s' % speech,
@@ -205,6 +206,8 @@ class mirror(object):
                     self.interaction(entities)
                 elif "transfer" in entities:
                     self.transferFunctions(entities)
+                elif "information" in entities:
+                    self.info(response)
                 else:
                     respond("I'm Sorry, I couldn't understand what you meant by that")
 
@@ -322,6 +325,11 @@ class mirror(object):
                 selfieAI.capture()
                 selfieAI.SendMail(base+'filename.jpg')
 
+    def info(self,response = None):
+        if response is not None:
+            intent  = response["entities"]['information'][0]['value']
+            if intent == "dict":
+                dictAI.meaning(response["_text"])
 
 if __name__ == "__main__":
     M = mirror()
