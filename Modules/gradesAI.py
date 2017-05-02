@@ -55,11 +55,11 @@ def grade(userid, passwd):
     return [table_heading, table_data]
 
 def gradesAI():
-    S = SpeechAI()
-    record,audio = S.ears()
-    course_code = S.recognize(record,audio)
-    course_code = course_code.replace(" ",'')
-    course_code = course_code.lower()
+    # S = SpeechAI()
+    # record,audio = S.ears()
+    # course_code = S.recognize(record,audio)
+    # course_code = course_code.replace(" ",'')
+    # course_code = course_code.lower()
     #table = grade("mudit16057@iiitd.ac.in","muditGarg@112")
     table = grade("madhur16053@iiitd.ac.in","ngyuxana23")
     for i in range (len(table[1])):
@@ -73,7 +73,8 @@ def gradesAI():
                     g = str(k[4])
                     g = g.replace('-',' minus')
                     g = g.replace('+',' plus')
-                    speak("grade is "+g+" and GPA is "+k[5])
+                    # speak("grade is "+g+" and GPA is "+k[5])
+
 if __name__=="__main__":
-    speak("subject")
-    gradesAI()
+    # speak("subject")
+    print(grade("madhur16053@iiitd.ac.in","ngyuxana23"))

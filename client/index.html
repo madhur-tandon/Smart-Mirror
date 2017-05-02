@@ -146,6 +146,27 @@
 				</article>
 			</section>
 		</div> 
+		<div class="content dictionary vc-parent" data-bind="if: type() == 'dictionary'">
+			<section class="vc-child">
+				<h3 data-bind="text: dictionary.word"></h3>
+				<div data-bind="foreach: dictionary.meanings">
+	 			    <div>
+	 			    	<b data-bind="text: $data.type"></b>
+	 			    	<div data-bind="foreach: $data.meanings">
+	 			    		<p data-bind="text: $data"></p>
+	 			    	</div>
+				    </div>
+				</div>
+			</section>
+		</div> 
+		<div class="content wikipedia vc-parent" data-bind="if: type() == 'wikipedia'">
+			<section class="vc-child">
+				<h3 data-bind="text: wikipedia.word"></h3>
+				<div>
+					<p data-bind="text: wikipedia.summary"></p>
+				</div>
+			</section>
+		</div> 
 	</div>
 	<div data-bind="if: mode() == 'passive'">
 		<div> 

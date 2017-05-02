@@ -43,6 +43,17 @@ exampleSocket.onmessage = function (event) {
     case "tic-tac-toe":
       vm.type("tic-tac-toe")
       vm.ticTacToe(o.data)
+      break;
+    case "dictionary":
+      vm.dictionary.word(o.word)
+      vm.dictionary.meanings(o.meanings)
+      vm.type("dictionary")
+      break;
+    case "wikipedia":
+      vm.dictionary.word(o.word)
+      vm.dictionary.summary(o.summary)
+      vm.type("wikipedia")
+      break;
   }
 }
 
@@ -85,7 +96,13 @@ var vm = {
       icon: ""
     }])
   },
-  ticTacToe: ko.observableArray(["", "", "", "", "", "", "", "", ""])
+  ticTacToe: ko.observableArray(["", "", "", "", "", "", "", "", ""]),
+  dictionary: {
+    word: ko.observable("word"), meanings: ko.observableArray([{"type": "Adjective", meanings: ["hi", "hi2"]}])},
+  wikipedia: {
+    word: ko.observable("Some word"),
+    summary: ko.observable("Summary")
+  }
 }
 
 ko.applyBindings(vm)
