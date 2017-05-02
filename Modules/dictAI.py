@@ -1,5 +1,5 @@
 from PyDictionary import PyDictionary
-from mirror import respond
+import mirror
 
 def meaning(phrase):
     try:
@@ -21,11 +21,11 @@ def meaning(phrase):
             for j in d[i]:
                 toRespond[-1]["meanings"].append(j)
 
-        respond(word, {
+        mirror.respond(word, {
             "type": "dictionary",
             "word": word,
             "meanings": toRespond
         })
 
     except Exception as e:
-        respond("I'm Sorry, I couldn't understand what you meant by that")
+        mirror.respond("I'm Sorry, I couldn't understand what you meant by that")
