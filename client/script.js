@@ -60,6 +60,10 @@ exampleSocket.onmessage = function (event) {
       vm.smail.body(o.body)
       vm.type("send-mail")
       break;
+    case "check-mail":
+      vm.cmails(o.mails)
+      vm.type("check-mail")
+      break;
     case "quote":
       vm.quote.quote(o.quote)
       vm.quote.author(o.author)
@@ -122,7 +126,8 @@ var vm = {
   quote: {
     quote: ko.observable(""),
     author: ko.observable("")
-  }
+  },
+  cmails: ko.observableArray([{"from": "test", "subject": "test"}])
 }
 
 ko.applyBindings(vm)

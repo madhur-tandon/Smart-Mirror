@@ -9,6 +9,7 @@ import string
 from cv2 import *
 from studentEmailDb import dict as emails
 import mirror
+import config
 
 respond = mirror.respond
 send = mirror.send
@@ -95,7 +96,7 @@ def capture(theft=False):
             respond(str(i))
         respond("Say cheese!")
         time.sleep(0.5)
-        cam = VideoCapture(1)
+        cam = VideoCapture(config.camera)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")
@@ -109,7 +110,7 @@ def capture(theft=False):
             destroyWindow("cam-test")
             imwrite(base+'filename.jpg',img)
     else:
-        cam = VideoCapture(1)
+        cam = VideoCapture(config.camera)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")

@@ -1,11 +1,12 @@
 # import selfieAI
 import sys
 import cv2
+import config
 
 class faceAI(object):
     def __init__(self,model = "faceModels/facial_recognition_model.xml",camera=0):
         self.recognitionModel = model
-        self.source = camera
+        self.source = config.camera
 
     def detect_face(self):
         face_cascade = cv2.CascadeClassifier(self.recognitionModel)
@@ -64,7 +65,7 @@ class faceAI(object):
     #                 return 1
 
 if __name__ == "__main__":
-    F = faceAI(camera=0)
+    F = faceAI(camera=config.camera)
     # F.show_live_detection()
     """
     Comment the above line &
