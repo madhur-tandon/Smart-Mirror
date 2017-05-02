@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from speechRecAI import SpeechAI
 from textToSpeechAI import speak
 
+import mirror
+
 def grade(userid, passwd):
     payload = {
         'appUser.userId':userid,
@@ -79,6 +81,11 @@ def gradesAI():
                         else:
                             a['not graded'].append(course)
     print(a)
+    mirror.send({
+        "type": "grades",
+        "grades": a
+    })
+
     speak("your CGPA is "+str(LEL/total_courses))
 
 if __name__=="__main__":

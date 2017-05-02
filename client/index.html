@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="css/weather-icons-wind.css" />
 </head>
 <body>
-	<div data-bind="if: mode() == 'active'">
+	<div>
 		<div class="content text" data-bind="if: type() == 'text'"> 
 			<p data-bind="text: text"></p>
 		</div>
@@ -177,19 +177,15 @@
 			</section>
 		</div> 
 		<div class="content check-mail vc-parent" data-bind="if: type() == 'check-mail'">
-			<section data-bind="foreach: cmails ">
+			<section class="vc-child" data-bind="foreach: cmails ">
 				<p><b data-bind="text: $data.from"></b> : <span data-bind="text: $data.subject"></span></p>
 			</section>
+		</div>
+		<div class="content time vc-parent" data-bind="if: type() == 'time'">
+			<section class="vc-child" style="font-size: 3em">
+				<span data-bind="text: time"></span>
+			</section>
 		</div> 
-	</div>
-	<div data-bind="if: mode() == 'passive'">
-		<div> 
-			<h1>Recent News</h1>
-			<ul data-bind="foreach: news">
-				<li data-bind="text: title"> </li>
-			</ul>
-		</div> 
-		<!-- more stuff for passive mode display goes here -->
 	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>

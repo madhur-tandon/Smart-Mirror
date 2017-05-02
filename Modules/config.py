@@ -1,1 +1,1 @@
-camera = 0
+camera = 1

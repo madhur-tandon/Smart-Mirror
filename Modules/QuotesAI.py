@@ -34,12 +34,11 @@ def Quotes():
     quote = " ".join(quotes[x][0].replace("\n","").split(" "))
     author = " ".join(quotes[x][1].replace("\n","").split(" "))
 
-    mirror.respond(quote + ". " + author, {
+    return quote + ". " + author, {
         "type": "quote",
         "quote": quote,
-        "author": author 
-    })
-    print("quote", quote, author)
+        "author": author
+    }
 
 if __name__=="__main__":
     Quotes()

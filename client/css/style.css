@@ -73,3 +73,7 @@ body pre {
   text-align: center;
   border: 3px solid white;
 }
+
+.weather * {
+	padding: 2px !important;
+}

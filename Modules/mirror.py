@@ -89,20 +89,16 @@ class mirror(object):
         self.lang = languageAI.naturalLanguageAI(myName)
         activeMode = False
         self.passivePollData = {
-            "headlines": {
-                "refresh": 60*60, #60 minutes
+            "news": {
+                "refresh": 20*60, # 20 minutes
                 "lastDone": 0
             },
             "quotes": {
-                "refresh": 3*60,
+                "refresh": 3*60, # 3 minutes
                 "lastDone": 0
             },
             "weather": {
-                "refresh": 5*60*60,
-                "lastDone": 0
-            },
-            "mess-meal": {
-                "refresh": 3*60,
+                "refresh": 60, # 60 seconds
                 "lastDone": 0
             }
         }
@@ -141,11 +137,22 @@ class mirror(object):
                 if not activeMode: # passive mode
                     for k in self.passivePollData:
                         if (time.time() - self.passivePollData[k]["lastDone"] > self.passivePollData[k]["refresh"]):
-                            if(k == "headlines"):
-                                response = self.news.findNews(random.choice(["india", "general", "tech"]))
+                            if(k == "news"):
+                                response = {
+                                    "type": "news",
+                                    "news": self.news.findNews(random.choice(["india", "general", "tech"]))
+                                }
                             elif(k == "weather"):
                                 LJ = self.weather.getLocation()
-                                response, spk = self.weather.findWeather("7-day", LJ)
+                                data, spk = self.weather.findWeather("hourly", LJ)
+                                response = {
+                                    "type": "weather",
+                                    "location": location,
+                                    "intent": "hourly",
+                                    "data": data
+                                }
+                            elif(k == "quotes"):
+                                spk, response = QuotesAI.Quotes()
                             respond(False, response)
                             self.passivePollData[k]["lastDone"] = time.time()
 
@@ -229,8 +236,6 @@ class mirror(object):
                     self.transferFunctions(entities)
                 elif "information" in entities:
                     self.info(response)
-                elif "theft" in entities:
-                    self.toggleTheftMode()
                 elif "misc" in entities:
                     self.miscFunctions(entities)
                 else:
@@ -361,7 +366,10 @@ class mirror(object):
                 ticTacToeAI.reset()
                 ticTacToeAI.game()
             elif intent == "quote":
-                QuotesAI.Quotes()
+                spk, response = QuotesAI.Quotes()
+                respond(spk, response)
+            elif intent == "theft":
+                self.toggleTheftMode()
 
     def info(self,response = None):
         if response is not None:

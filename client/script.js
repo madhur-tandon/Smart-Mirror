@@ -1,5 +1,15 @@
 var exampleSocket = new WebSocket("ws://localhost:8765");
 
+var passiveModes = ['quote', 'weather', 'news', 'time']
+
+passiveModeInterval = setInterval(function () {
+  if (vm.mode() == "passive") {
+    var item = passiveModes[Math.floor(Math.random()*passiveModes.length)];
+    vm.type(item)
+  }
+}, 20 * 1000)
+
+
 exampleSocket.onmessage = function (event) {
   try {
     var o = JSON.parse(event.data)
@@ -82,7 +92,7 @@ function sendText(msg) {
 
 var vm = {
   text: ko.observable("Hello, connecting to server"),
-  type: ko.observable("text"),
+  type: ko.observable(""),
   json: ko.observable("{}"),
   imageSrc: ko.observable(""),
   news: ko.observableArray([]),
@@ -127,7 +137,34 @@ var vm = {
     quote: ko.observable(""),
     author: ko.observable("")
   },
-  cmails: ko.observableArray([{"from": "test", "subject": "test"}])
+  cmails: ko.observableArray([{"from": "test", "subject": "test"}]),
+  time: ko.observable("10:00 AM")
 }
+
+function fmtTime() {
+  var date = new Date();
+  var hrs = date.getHours()
+  var ampm = "AM"
+  if (hrs > 12) {
+    ampm = "PM"
+    hrs = hrs % 12
+  }
+  var mints = date.getMinutes()
+  // zerofilling
+  if (hrs < 10) {
+    hrs = "0" + hrs
+  }
+
+  if (mints < 10) {
+    mints = "0" + mints
+  }
+
+  return hrs + ":" + mints + " " + ampm
+}
+
+vm.time(fmtTime())
+timeInterval = setInterval(function () {
+  vm.time(fmtTime())
+}, 1000)
 
 ko.applyBindings(vm)
