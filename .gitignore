@@ -2,4 +2,5 @@
 *.pyc
 __pycache__
 client/selfies
-Module/files.mp3
+Modules/file.mp3
+Modules/emails.csv

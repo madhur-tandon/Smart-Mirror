@@ -12,8 +12,8 @@ import csv
 
 dict = {}
 
-with open('source.csv', newline='') as file:
+with open('emails.csv', newline='') as file:
     rows = csv.reader(file, delimiter=',')
     for row in rows:
         if(row[2] != ""):
-            dict[row[0]] = {"email": row[2], "name": row[1]}
+            dict[row[0]] = {"email": row[2], "name": row[1].title()}

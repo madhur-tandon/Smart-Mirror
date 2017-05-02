@@ -55,12 +55,6 @@ def grade(userid, passwd):
     return [table_heading, table_data]
 
 def gradesAI():
-    # S = SpeechAI()
-    # record,audio = S.ears()
-    # course_code = S.recognize(record,audio)
-    # course_code = course_code.replace(" ",'')
-    # course_code = course_code.lower()
-    #table = grade("mudit16057@iiitd.ac.in","muditGarg@112")
     a={}
     table = grade("madhur16053@iiitd.ac.in","ngyuxana23")
     LEL = 0
@@ -84,15 +78,8 @@ def gradesAI():
                             a['not graded'].append(course)
                         else:
                             a['not graded'].append(course)
-                    # speak("grade is "+g+" and GPA is "+k[5] +" in course "+course)
     print(a)
     speak("your CGPA is "+str(LEL/total_courses))
-                # course = course.lower()
-                # course = course.replace(" ",'')
-                # if course_code in course:
-                #     g = str(k[4])
-                #     g = g.replace('-',' minus')
-                #     g = g.replace('+',' plus')
-                #     speak("grade is "+g+" and GPA is "+k[5])
+
 if __name__=="__main__":
     gradesAI()

@@ -5,6 +5,9 @@ import speechRecAI
 from textToSpeechAI import speak
 import time
 from random import randint
+import mirror
+
+send = mirror.send
 
 def draw():
 	if not win():
@@ -169,6 +172,11 @@ def directiony(turn):
 	elif "nine" in turn or "9" in turn:
 		return -8
 
+def xo(x):
+	if x == None:
+		return ""
+	else:
+		return x.upper()
 
 def computer(name):
 	speech = ["Well Played", "That's a nice move", "Woah, you are a Genius", "How good is that move!", "I am impressed", "Are you a pro?", "That's intelligent", "Wait! i'll have to think a bit"]
@@ -185,6 +193,16 @@ def computer(name):
 				print(l[i][j],end="   |   ")
 		print(end="\n|_______|_______|_______|\n")
 	print()
+	toSend = []
+
+	for i in range(3):
+		for j in range(3):
+			toSend.append(xo(l[i][j]))
+
+	send({
+		"type": "tic-tac-toe",
+		"data": toSend 
+	})
 
 	while True:
 		if win():
@@ -194,16 +212,18 @@ def computer(name):
 				text = "Gotcha, I Win"
 			else:
 				text = "You are a legend. I feel proud that it took such genius to defeat me"
+			# reset()
 			speak(text)
 			break;
 		if draw():
+			# reset()
 			speak("nice playing with you, MATCH DRAWN")
 			break;
 
 
 		string=name['x']+" Say your Move"
 		speak(string)
-		record,audio = S.ears()
+		record, audio = S.ears()
 		turn = S.recognize(record,audio)
 		#turn = input()
 		turn =turn.lower()
@@ -252,7 +272,19 @@ def computer(name):
 			print(end="\n|_______|_______|_______|\n")
 		print()
 
+		toSend = []
+
+		for i in range(3):
+			for j in range(3):
+				toSend.append(xo(l[i][j]))
+
+		send({
+			"type": "tic-tac-toe",
+			"data": toSend 
+		})
+
 		if win():
+
 			m=win()
 			player=m[1]
 			if m[1]=="o":
@@ -260,8 +292,11 @@ def computer(name):
 			else:
 				text = "You are a legend. i feel proud that it took such genius to defeat me"
 			speak(text)
+			# reset()
 			break;
 		if draw():
+			# reset()
+	
 			speak("nice playing with you, MATCH DRAWN")
 			break;
 
@@ -285,7 +320,18 @@ def computer(name):
 				else:
 					print(l[i][j],end="   |   ")
 			print(end="\n|_______|_______|_______|\n")
-		print()
+
+		toSend = []
+
+		for i in range(3):
+			for j in range(3):
+				toSend.append(xo(l[i][j]))
+
+		send({
+			"type": "tic-tac-toe",
+			"data": toSend 
+		})
+
 		string = "I move at block "+str(block(xi,yi))
 		speak(string)
 
@@ -545,13 +591,8 @@ def coordinate(block):
 S = speechRecAI.SpeechAI(0.55,True)
 N = speechRecAI.SpeechAI(0.30)
 def game() :
-
-	speak("May i know my opponent's name")
-	record,audio = N.ears()
-	p1 = N.recognize(record,audio)
-	#p1 = input()
-	name={'x':p1,'o':"I"}
-	string = p1+" plays with  X"
+	name={'x': "Player",'o':"I"}
+	string = "Player plays with  X"
 	speak(string)
 	speak("I play with O")
 	computer(name)
@@ -562,9 +603,19 @@ def game() :
 #____________________________________________________________________________________________________________________________________
 #____________________________________________________________________________________________________________________________________
 
-
 x=[]
 y=[]
 a={1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None}
 player=0
-game()
+
+def reset():
+	global x, y, a, player
+	x=[]
+	y=[]
+	a={1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None}
+	player=0
+
+if __name__ == '__main__':
+	game()
+	reset()
+	

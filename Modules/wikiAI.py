@@ -1,16 +1,15 @@
 import wikipedia
 from speechRecAI import SpeechAI
 from subprocess import call
+from mirror import respond
 
-def word_meaning():
-    S = SpeechAI()
-    print("Say the Word ")
-    record,audio = S.ears()
-    word = S.recognize(record,audio)
-    #word = 'summer'
+def word_meaning(word):
     ny = wikipedia.page(word)
-    #call(["reset"])
-    print(ny.content)
+    respond("Here's some information on " + word, {
+    	"type": "wikipedia",
+    	"word": word,
+    	"summary": ny.summary
+	})
 
 if __name__=="__main__":
-    word_meaning()
+    word_meaning("dictionary")

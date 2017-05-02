@@ -1,4 +1,5 @@
 from PyDictionary import PyDictionary
+from mirror import respond
 
 def meaning(phrase):
     try:
@@ -8,12 +9,23 @@ def meaning(phrase):
 
         dictionary=PyDictionary()
         d = dictionary.meaning(word)
-        print(d)
+
+        toRespond = []
+
         for i in d:
-            print(i)
+            toRespond.append({
+                "type": i,
+                "meanings": []
+            })
+
             for j in d[i]:
-                print(j)
-            print()
+                toRespond[-1]["meanings"].append(j)
+
+        respond(word, {
+            "type": "dictionary",
+            "word": word,
+            "meanings": toRespond
+        })
 
     except Exception as e:
-        print("I'm Sorry, I couldn't understand what you meant by that")
+        respond("I'm Sorry, I couldn't understand what you meant by that")

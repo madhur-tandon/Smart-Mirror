@@ -4,15 +4,18 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 import speechRecAI
-from textToSpeechAI import speak
 import time
 import string
 from cv2 import *
+from studentEmailDb import dict as emails
+import mirror
+
+respond = mirror.respond
+send = mirror.send
 
 S = speechRecAI.SpeechAI(0.55)
-D = {'2016053':'madhur16053@iiitd.ac.in','2016242':'mandeep16242@iiitd.ac.in','2016199':'siddhant16199@iiitd.ac.in','2016245':'mayank16245@iiitd.ac.in', '2016151':'harshit16151@iiitd.ac.in', '2016057':'mudit16057@iiitd.ac.in'}
 
-def SendMail(ImgFileName,theft=False):
+def SendMail(ImgFileName, theft=False):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.ehlo()
     s.starttls()
@@ -20,14 +23,16 @@ def SendMail(ImgFileName,theft=False):
     s.login('smart.mirrorai@gmail.com', 'smartmirror23')
     if theft == False:
         Roll = 'default'
-        while Roll not in D:
-            speak("Say your Roll Number")
-            record,audio = S.ears()
+        while Roll not in emails or Roll.lower() != "cancel":
+            if Roll.lower() == "cancel":
+                return
+            respond("Say your Roll Number", False)
+            record, audio = S.ears()
             Roll = S.recognize(record,audio)
             for i in string.punctuation:
                 Roll=Roll.replace(i,"")
             Roll=Roll.replace(" ","")
-        Recipient = D[Roll]
+        Recipient = emails[Roll]["email"]
 
         msg = MIMEMultipart()
         msg['Subject'] = 'Your Sexy Picture!'
@@ -87,10 +92,10 @@ def capture(theft=False):
     base = "../client/selfies/"
     if theft == False:
         for i in range(3,0,-1):
-            speak(str(i))
-        speak("Cheese!")
+            respond(str(i))
+        respond("Say cheese!")
         time.sleep(0.5)
-        cam = VideoCapture(0)
+        cam = VideoCapture(1)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")
@@ -104,13 +109,13 @@ def capture(theft=False):
             destroyWindow("cam-test")
             imwrite(base+'filename.jpg',img)
     else:
-        cam = VideoCapture(0)
+        cam = VideoCapture(1)
         s, img = cam.read()
         if s:
             namedWindow("cam-test")
-            imshow("cam-test",img)
+            imshow("cam-test", img)
             destroyWindow("cam-test")
-            imwrite(base+'filename.jpg',img)
+            imwrite(base + 'filename.jpg', img)
 
 if __name__=="__main__":
     base = "../client/selfies/"

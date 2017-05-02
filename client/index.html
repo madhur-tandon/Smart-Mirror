@@ -8,14 +8,16 @@
 </head>
 <body>
 	<div data-bind="if: mode() == 'active'">
-		<div class="content news" data-bind="if: type() == 'text'"> 
+		<div class="content text" data-bind="if: type() == 'text'"> 
 			<p data-bind="text: text"></p>
 		</div>
 		<div class="content json"  data-bind="if: type() == 'json'"> 
 			<pre data-bind="text: json"></pre>
 		</div>
 		<div class="content image"  data-bind="if: type() == 'image'">
-			<img data-bind="attr:{src: imageSrc}"/>
+			<div class="vc-child">
+				<img data-bind="attr:{src: imageSrc}"/>
+			</div>
 		</div>
 		<div class="content tic-tac-toe vc-parent"  data-bind="if: type() == 'tic-tac-toe'">
 			<div class="vc-child">
@@ -108,7 +110,7 @@
 			    <span style="flex:1;">
 			    	<span data-bind="text: weather.data()[0].summary">
 			    </span>
-		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data().slice(1)">
 			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
 			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.day"></span></span>
 		    		</i>
@@ -122,7 +124,7 @@
 			    <span style="flex:1;">
 			      Temperature: <span data-bind="text: weather.data()[0].temp">℃</span>
 			    </span>
-		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data">
+		    	<div style="flex: 2; display: flex" class="vc-parent" data-bind="foreach: weather.data().slice(1)">
 			    	<i data-bind="attr: {class: 'vc-child wi wi-' + $data.icon}" style="font-size: 1.5em; flex: 1">
 			    		<span style="font-size: 0.4em"><br><span data-bind="text: $data.hour"></span></span>
 		    		</i>
@@ -142,6 +144,27 @@
 							style="flex:4"> </p>
 					</div>
 				</article>
+			</section>
+		</div> 
+		<div class="content dictionary vc-parent" data-bind="if: type() == 'dictionary'">
+			<section class="vc-child">
+				<h3 data-bind="text: dictionary.word"></h3>
+				<div data-bind="foreach: dictionary.meanings">
+	 			    <div>
+	 			    	<b data-bind="text: $data.type"></b>
+	 			    	<div data-bind="foreach: $data.meanings">
+	 			    		<p data-bind="text: $data"></p>
+	 			    	</div>
+				    </div>
+				</div>
+			</section>
+		</div> 
+		<div class="content wikipedia vc-parent" data-bind="if: type() == 'wikipedia'">
+			<section class="vc-child">
+				<h3 data-bind="text: wikipedia.word"></h3>
+				<div>
+					<p data-bind="text: wikipedia.summary"></p>
+				</div>
 			</section>
 		</div> 
 	</div>
