@@ -7,7 +7,6 @@ import random
 from textToSpeechAI import speak
 from speechRecAI import SpeechAI
 import time
-<<<<<<< HEAD
 import weatherAI
 import newsAI
 import mapsAI
@@ -17,7 +16,6 @@ import mailCheckAI
 import mailAI
 import selfieAI
 import dictAI
-||||||| merged common ancestors
 import weatherAI
 import newsAI
 import mapsAI
@@ -26,8 +24,6 @@ import languageAI
 import mailCheckAI
 import mailAI
 import selfieAI
-=======
->>>>>>> 53c557c18cc71dd6135990edebaecc52303bbfa9
 from server import sendToClient, sendJSON, setHandler
 import datetime
 
